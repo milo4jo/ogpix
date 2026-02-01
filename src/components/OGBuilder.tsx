@@ -58,6 +58,10 @@ export function OGBuilder() {
   const [author, setAuthor] = useState("");
   const [watermark, setWatermark] = useState(true);
   const [showAdvanced, setShowAdvanced] = useState(false);
+  // Border options
+  const [borderWidth, setBorderWidth] = useState(0);
+  const [borderColor, setBorderColor] = useState("#ffffff");
+  const [borderRadius, setBorderRadius] = useState(0);
   const [copied, setCopied] = useState(false);
   const [origin, setOrigin] = useState("");
 
@@ -84,6 +88,11 @@ export function OGBuilder() {
     if (debouncedTag) params.set("tag", debouncedTag);
     if (debouncedAuthor) params.set("author", debouncedAuthor);
     if (!watermark) params.set("watermark", "false");
+    // Border options
+    if (borderWidth > 0) params.set("borderWidth", borderWidth.toString());
+    if (borderWidth > 0 && borderColor !== "#ffffff")
+      params.set("borderColor", borderColor.replace("#", ""));
+    if (borderRadius > 0) params.set("borderRadius", borderRadius.toString());
     return `/api/og?${params.toString()}`;
   }, [
     debouncedTitle,
@@ -96,6 +105,9 @@ export function OGBuilder() {
     debouncedTag,
     debouncedAuthor,
     watermark,
+    borderWidth,
+    borderColor,
+    borderRadius,
   ]);
 
   // Live URL for copying (uses current values, not debounced)
@@ -111,8 +123,27 @@ export function OGBuilder() {
     if (tag) params.set("tag", tag);
     if (author) params.set("author", author);
     if (!watermark) params.set("watermark", "false");
+    // Border options
+    if (borderWidth > 0) params.set("borderWidth", borderWidth.toString());
+    if (borderWidth > 0 && borderColor !== "#ffffff")
+      params.set("borderColor", borderColor.replace("#", ""));
+    if (borderRadius > 0) params.set("borderRadius", borderRadius.toString());
     return `/api/og?${params.toString()}`;
-  }, [title, subtitle, theme, template, pattern, fontSize, layout, tag, author, watermark]);
+  }, [
+    title,
+    subtitle,
+    theme,
+    template,
+    pattern,
+    fontSize,
+    layout,
+    tag,
+    author,
+    watermark,
+    borderWidth,
+    borderColor,
+    borderRadius,
+  ]);
 
   const fullUrl = origin ? `${origin}${liveUrl}` : liveUrl;
 
@@ -304,6 +335,46 @@ export function OGBuilder() {
               />
               Show watermark (Pro removes this)
             </label>
+
+            {/* Border Options */}
+            <div className="pt-3 border-t border-neutral-800">
+              <label className="block text-xs text-neutral-500 mb-2">Border (Premium)</label>
+              <div className="grid grid-cols-3 gap-3">
+                <div>
+                  <label className="block text-xs text-neutral-600 mb-1">Width</label>
+                  <input
+                    type="range"
+                    min="0"
+                    max="20"
+                    value={borderWidth}
+                    onChange={(e) => setBorderWidth(parseInt(e.target.value))}
+                    className="w-full accent-white"
+                  />
+                  <span className="text-xs text-neutral-500">{borderWidth}px</span>
+                </div>
+                <div>
+                  <label className="block text-xs text-neutral-600 mb-1">Color</label>
+                  <input
+                    type="color"
+                    value={borderColor}
+                    onChange={(e) => setBorderColor(e.target.value)}
+                    className="w-full h-8 rounded cursor-pointer bg-transparent"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs text-neutral-600 mb-1">Radius</label>
+                  <input
+                    type="range"
+                    min="0"
+                    max="60"
+                    value={borderRadius}
+                    onChange={(e) => setBorderRadius(parseInt(e.target.value))}
+                    className="w-full accent-white"
+                  />
+                  <span className="text-xs text-neutral-500">{borderRadius}px</span>
+                </div>
+              </div>
+            </div>
           </div>
         </details>
 

@@ -2,6 +2,7 @@
 
 import { useState, useMemo, useEffect } from "react";
 import { OGPreview } from "./OGPreview";
+import { useDebounce } from "@/hooks/useDebounce";
 
 const themes = [
   "dark",
@@ -54,7 +55,29 @@ export function OGBuilder() {
     setOrigin(window.location.origin);
   }, []);
 
+  // Debounce text inputs to prevent request on every keystroke
+  const debouncedTitle = useDebounce(title, 300);
+  const debouncedSubtitle = useDebounce(subtitle, 300);
+  const debouncedTag = useDebounce(tag, 300);
+  const debouncedAuthor = useDebounce(author, 300);
+
   const imageUrl = useMemo(() => {
+    const params = new URLSearchParams();
+    params.set("title", debouncedTitle);
+    if (debouncedSubtitle) params.set("subtitle", debouncedSubtitle);
+    params.set("theme", theme);
+    if (template) params.set("template", template);
+    if (pattern !== "none") params.set("pattern", pattern);
+    if (fontSize !== "auto") params.set("fontSize", fontSize);
+    if (layout !== "center") params.set("layout", layout);
+    if (debouncedTag) params.set("tag", debouncedTag);
+    if (debouncedAuthor) params.set("author", debouncedAuthor);
+    if (!watermark) params.set("watermark", "false");
+    return `/api/og?${params.toString()}`;
+  }, [debouncedTitle, debouncedSubtitle, theme, template, pattern, fontSize, layout, debouncedTag, debouncedAuthor, watermark]);
+
+  // Live URL for copying (uses current values, not debounced)
+  const liveUrl = useMemo(() => {
     const params = new URLSearchParams();
     params.set("title", title);
     if (subtitle) params.set("subtitle", subtitle);
@@ -69,7 +92,7 @@ export function OGBuilder() {
     return `/api/og?${params.toString()}`;
   }, [title, subtitle, theme, template, pattern, fontSize, layout, tag, author, watermark]);
 
-  const fullUrl = origin ? `${origin}${imageUrl}` : imageUrl;
+  const fullUrl = origin ? `${origin}${liveUrl}` : liveUrl;
 
   const handleCopy = () => {
     navigator.clipboard.writeText(fullUrl);

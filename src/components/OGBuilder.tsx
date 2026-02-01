@@ -40,11 +40,18 @@ const templates = [
   { id: "changelog", name: "Changelog" },
   { id: "showcase", name: "Showcase" },
   { id: "news", name: "News" },
+  // New Vercel-style templates
+  { id: "vercel", name: "Vercel" },
+  { id: "minimal", name: "Minimal" },
+  { id: "split", name: "Split" },
+  { id: "hero", name: "Hero" },
+  { id: "feature", name: "Feature" },
+  { id: "release", name: "Release" },
 ];
 
 const patterns = ["none", "dots", "grid", "diagonal"];
 const fontSizes = ["auto", "sm", "md", "lg", "xl"];
-const layouts = ["center", "left"];
+const layouts = ["center", "left", "hero", "minimal", "split", "card", "featured", "modern"];
 
 export function OGBuilder() {
   const [title, setTitle] = useState("Build Something Amazing");
@@ -62,6 +69,11 @@ export function OGBuilder() {
   const [borderWidth, setBorderWidth] = useState(0);
   const [borderColor, setBorderColor] = useState("#ffffff");
   const [borderRadius, setBorderRadius] = useState(0);
+  // New Vercel-style options
+  const [badge, setBadge] = useState("");
+  const [date, setDate] = useState("");
+  const [icon, setIcon] = useState("");
+  const [gradientText, setGradientText] = useState(false);
   const [copied, setCopied] = useState(false);
   const [origin, setOrigin] = useState("");
 
@@ -75,6 +87,9 @@ export function OGBuilder() {
   const debouncedSubtitle = useDebounce(subtitle, 300);
   const debouncedTag = useDebounce(tag, 300);
   const debouncedAuthor = useDebounce(author, 300);
+  const debouncedBadge = useDebounce(badge, 300);
+  const debouncedDate = useDebounce(date, 300);
+  const debouncedIcon = useDebounce(icon, 300);
 
   const imageUrl = useMemo(() => {
     const params = new URLSearchParams();
@@ -93,6 +108,11 @@ export function OGBuilder() {
     if (borderWidth > 0 && borderColor !== "#ffffff")
       params.set("borderColor", borderColor.replace("#", ""));
     if (borderRadius > 0) params.set("borderRadius", borderRadius.toString());
+    // New Vercel-style options
+    if (debouncedBadge) params.set("badge", debouncedBadge);
+    if (debouncedDate) params.set("date", debouncedDate);
+    if (debouncedIcon) params.set("icon", debouncedIcon);
+    if (gradientText) params.set("gradientText", "true");
     return `/api/og?${params.toString()}`;
   }, [
     debouncedTitle,
@@ -108,6 +128,10 @@ export function OGBuilder() {
     borderWidth,
     borderColor,
     borderRadius,
+    debouncedBadge,
+    debouncedDate,
+    debouncedIcon,
+    gradientText,
   ]);
 
   // Live URL for copying (uses current values, not debounced)
@@ -128,6 +152,11 @@ export function OGBuilder() {
     if (borderWidth > 0 && borderColor !== "#ffffff")
       params.set("borderColor", borderColor.replace("#", ""));
     if (borderRadius > 0) params.set("borderRadius", borderRadius.toString());
+    // New Vercel-style options
+    if (badge) params.set("badge", badge);
+    if (date) params.set("date", date);
+    if (icon) params.set("icon", icon);
+    if (gradientText) params.set("gradientText", "true");
     return `/api/og?${params.toString()}`;
   }, [
     title,
@@ -143,6 +172,10 @@ export function OGBuilder() {
     borderWidth,
     borderColor,
     borderRadius,
+    badge,
+    date,
+    icon,
+    gradientText,
   ]);
 
   const fullUrl = origin ? `${origin}${liveUrl}` : liveUrl;
@@ -310,7 +343,7 @@ export function OGBuilder() {
               </div>
               <div>
                 <label className="block text-xs text-neutral-500 mb-1">Layout</label>
-                <div className="flex gap-1">
+                <div className="flex flex-wrap gap-1">
                   {layouts.map((l) => (
                     <button
                       key={l}
@@ -335,6 +368,52 @@ export function OGBuilder() {
               />
               Show watermark (Pro removes this)
             </label>
+
+            {/* Vercel-style Options */}
+            <div className="pt-3 border-t border-neutral-800">
+              <label className="block text-xs text-neutral-500 mb-2">Vercel-style Options</label>
+              <div className="grid grid-cols-2 gap-4 mb-3">
+                <div>
+                  <label className="block text-xs text-neutral-600 mb-1">Badge</label>
+                  <input
+                    type="text"
+                    value={badge}
+                    onChange={(e) => setBadge(e.target.value)}
+                    className="w-full bg-neutral-900 border border-neutral-800 rounded px-3 py-2 text-sm"
+                    placeholder="New"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs text-neutral-600 mb-1">Date</label>
+                  <input
+                    type="text"
+                    value={date}
+                    onChange={(e) => setDate(e.target.value)}
+                    className="w-full bg-neutral-900 border border-neutral-800 rounded px-3 py-2 text-sm"
+                    placeholder="Jan 2026"
+                  />
+                </div>
+              </div>
+              <div className="mb-3">
+                <label className="block text-xs text-neutral-600 mb-1">Icon/Emoji (hero layout)</label>
+                <input
+                  type="text"
+                  value={icon}
+                  onChange={(e) => setIcon(e.target.value)}
+                  className="w-full bg-neutral-900 border border-neutral-800 rounded px-3 py-2 text-sm"
+                  placeholder="🚀"
+                />
+              </div>
+              <label className="flex items-center gap-2 text-sm text-neutral-400">
+                <input
+                  type="checkbox"
+                  checked={gradientText}
+                  onChange={(e) => setGradientText(e.target.checked)}
+                  className="rounded"
+                />
+                Gradient title text
+              </label>
+            </div>
 
             {/* Border Options */}
             <div className="pt-3 border-t border-neutral-800">

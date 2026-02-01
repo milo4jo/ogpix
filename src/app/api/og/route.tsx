@@ -313,6 +313,15 @@ export async function GET(request: NextRequest) {
   const fontSize = searchParams.get("fontSize") || "auto";
   const layout = searchParams.get("layout") || "center";
   const pattern = searchParams.get("pattern") || "none";
+  
+  // New: Icon/emoji support
+  const icon = searchParams.get("icon") || "";
+  // New: Date display
+  const date = sanitizeText(searchParams.get("date") || "", 50);
+  // New: Badge/category  
+  const badge = sanitizeText(searchParams.get("badge") || "", 30);
+  // New: Gradient text option
+  const gradientText = searchParams.get("gradientText") === "true";
   const tag = sanitizeText(searchParams.get("tag") || "", 50);
   const author = sanitizeText(searchParams.get("author") || "", 100);
   const watermark = searchParams.get("watermark") !== "false";
@@ -401,25 +410,33 @@ export async function GET(request: NextRequest) {
     },
   };
 
-  // Template presets
-  const templates: Record<string, Partial<{ tag: string; layout: string; pattern: string }>> = {
+  // Template presets - expanded with Vercel-style layouts
+  const templates: Record<string, Partial<{ tag: string; layout: string; pattern: string; badge: string }>> = {
     blog: { tag: "Blog Post", layout: "left", pattern: "dots" },
     github: { tag: "Open Source", layout: "center", pattern: "grid" },
     product: { tag: "Product", layout: "center", pattern: "none" },
     event: { tag: "Event", layout: "center", pattern: "diagonal" },
     docs: { tag: "Documentation", layout: "left", pattern: "grid" },
-    // New templates
-    announcement: { tag: "Announcement", layout: "center", pattern: "none" },
+    // New templates - Vercel-inspired
+    announcement: { tag: "Announcement", layout: "hero", pattern: "none" },
     tutorial: { tag: "Tutorial", layout: "left", pattern: "dots" },
-    changelog: { tag: "Changelog", layout: "left", pattern: "grid" },
-    showcase: { tag: "Showcase", layout: "center", pattern: "diagonal" },
-    news: { tag: "News", layout: "left", pattern: "none" },
+    changelog: { tag: "Changelog", layout: "card", pattern: "grid" },
+    showcase: { tag: "Showcase", layout: "featured", pattern: "diagonal" },
+    news: { tag: "News", layout: "card", pattern: "none" },
+    // New Vercel-style templates
+    vercel: { layout: "modern", pattern: "none" },
+    minimal: { layout: "minimal", pattern: "none" },
+    split: { layout: "split", pattern: "none" },
+    hero: { layout: "hero", pattern: "none" },
+    feature: { badge: "New", layout: "featured", pattern: "none" },
+    release: { badge: "Release", layout: "card", pattern: "grid" },
   };
 
   const templateConfig = templates[template] || {};
   const finalTag = tag || templateConfig.tag || "";
   const finalLayout = layout || templateConfig.layout || "center";
   const finalPattern = pattern || templateConfig.pattern || "none";
+  const finalBadge = badge || templateConfig.badge || "";
 
   const baseColors = themes[theme as keyof typeof themes] || themes.dark;
   const colors = {
@@ -466,91 +483,211 @@ export async function GET(request: NextRequest) {
       {/* Pattern overlay - now using React components */}
       {finalPattern !== "none" && <PatternOverlay pattern={finalPattern} color={colors.text} />}
 
-      {/* Content */}
+      {/* Modern layout - Vercel-style gradient accent bar */}
+      {finalLayout === "modern" && (
+        <div
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            height: "6px",
+            background: "linear-gradient(90deg, #0070f3 0%, #7928ca 50%, #ff0080 100%)",
+          }}
+        />
+      )}
+
+      {/* Content - Layout-specific rendering */}
       <div
         style={{
           display: "flex",
-          flexDirection: "column",
+          flexDirection: finalLayout === "split" ? "row" : "column",
           flex: 1,
-          justifyContent: finalLayout === "center" ? "center" : "flex-end",
-          alignItems: finalLayout === "center" ? "center" : "flex-start",
-          textAlign: finalLayout === "center" ? "center" : "left",
+          justifyContent: 
+            finalLayout === "center" || finalLayout === "hero" || finalLayout === "minimal" 
+              ? "center" 
+              : finalLayout === "modern" || finalLayout === "featured"
+                ? "flex-start"
+                : "flex-end",
+          alignItems: 
+            finalLayout === "center" || finalLayout === "hero" || finalLayout === "minimal"
+              ? "center"
+              : "flex-start",
+          textAlign: 
+            finalLayout === "center" || finalLayout === "hero" || finalLayout === "minimal"
+              ? "center"
+              : "left",
           zIndex: 1,
+          gap: finalLayout === "split" ? "60px" : 0,
         }}
       >
-        {/* Tag */}
-        {finalTag && (
+        {/* Split layout - vertical accent line */}
+        {finalLayout === "split" && (
           <div
             style={{
-              display: "flex",
-              fontSize: "18px",
-              color: colors.accent,
-              marginBottom: "16px",
-              textTransform: "uppercase",
-              letterSpacing: "2px",
-              fontWeight: 500,
-            }}
-          >
-            {finalTag}
-          </div>
-        )}
-
-        {/* Logo */}
-        {logoUrl && (
-          <img
-            src={logoUrl}
-            width={60}
-            height={60}
-            style={{
-              marginBottom: "24px",
-              borderRadius: "12px",
+              width: "4px",
+              height: "200px",
+              background: "linear-gradient(180deg, #0070f3 0%, #7928ca 100%)",
+              borderRadius: "2px",
+              flexShrink: 0,
             }}
           />
         )}
 
-        {/* Title */}
-        <h1
+        {/* Main content wrapper */}
+        <div
           style={{
-            fontSize: `${titleFontSize}px`,
-            fontWeight: 700,
-            color: colors.text,
-            margin: 0,
-            lineHeight: 1.2,
-            maxWidth: "1000px",
+            display: "flex",
+            flexDirection: "column",
+            flex: 1,
           }}
         >
-          {title}
-        </h1>
+          {/* Badge (new) */}
+          {finalBadge && (
+            <div
+              style={{
+                display: "flex",
+                fontSize: "14px",
+                color: "#ffffff",
+                marginBottom: "16px",
+                padding: "6px 16px",
+                background: "linear-gradient(135deg, #0070f3 0%, #7928ca 100%)",
+                borderRadius: "20px",
+                fontWeight: 600,
+                textTransform: "uppercase",
+                letterSpacing: "1px",
+              }}
+            >
+              {finalBadge}
+            </div>
+          )}
 
-        {/* Subtitle */}
-        {subtitle && (
-          <p
+          {/* Icon (new - for hero layout) */}
+          {icon && finalLayout === "hero" && (
+            <div
+              style={{
+                fontSize: "72px",
+                marginBottom: "24px",
+              }}
+            >
+              {icon}
+            </div>
+          )}
+
+          {/* Tag */}
+          {finalTag && finalLayout !== "minimal" && (
+            <div
+              style={{
+                display: "flex",
+                fontSize: "18px",
+                color: colors.accent,
+                marginBottom: "16px",
+                textTransform: "uppercase",
+                letterSpacing: "2px",
+                fontWeight: 500,
+              }}
+            >
+              {finalTag}
+            </div>
+          )}
+
+          {/* Logo */}
+          {logoUrl && (
+            <img
+              src={logoUrl}
+              width={60}
+              height={60}
+              style={{
+                marginBottom: "24px",
+                borderRadius: "12px",
+              }}
+            />
+          )}
+
+          {/* Title - with optional gradient text */}
+          <h1
             style={{
-              fontSize: "28px",
-              color: colors.accent,
-              margin: "20px 0 0 0",
-              maxWidth: "800px",
-              lineHeight: 1.4,
+              fontSize: `${titleFontSize}px`,
+              fontWeight: 700,
+              color: gradientText ? "transparent" : colors.text,
+              margin: 0,
+              lineHeight: 1.2,
+              maxWidth: "1000px",
+              ...(gradientText && {
+                backgroundImage: "linear-gradient(135deg, #0070f3 0%, #7928ca 50%, #ff0080 100%)",
+                backgroundClip: "text",
+                WebkitBackgroundClip: "text",
+              }),
             }}
           >
-            {subtitle}
-          </p>
-        )}
+            {title}
+          </h1>
 
-        {/* Author */}
-        {author && (
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              marginTop: "24px",
-              fontSize: "20px",
-              color: colors.accent,
-            }}
-          >
-            by {author}
-          </div>
-        )}
+          {/* Subtitle */}
+          {subtitle && finalLayout !== "minimal" && (
+            <p
+              style={{
+                fontSize: "28px",
+                color: colors.accent,
+                margin: "20px 0 0 0",
+                maxWidth: "800px",
+                lineHeight: 1.4,
+              }}
+            >
+              {subtitle}
+            </p>
+          )}
+
+          {/* Card layout - metadata footer */}
+          {finalLayout === "card" && (author || date) && (
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                marginTop: "32px",
+                gap: "24px",
+                fontSize: "18px",
+                color: colors.accent,
+              }}
+            >
+              {author && (
+                <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                  <div
+                    style={{
+                      width: "32px",
+                      height: "32px",
+                      borderRadius: "50%",
+                      background: colors.accent,
+                      opacity: 0.3,
+                    }}
+                  />
+                  <span>{author}</span>
+                </div>
+              )}
+              {date && (
+                <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                  <span>•</span>
+                  <span>{date}</span>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Default author display (for non-card layouts) */}
+          {author && finalLayout !== "card" && finalLayout !== "minimal" && (
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                marginTop: "24px",
+                fontSize: "20px",
+                color: colors.accent,
+              }}
+            >
+              by {author}
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Watermark */}

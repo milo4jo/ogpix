@@ -42,6 +42,11 @@ const templates = [
   { name: "product", description: "Product launch announcement" },
   { name: "event", description: "Event or conference" },
   { name: "docs", description: "Documentation page" },
+  { name: "announcement", description: "Announcements and updates" },
+  { name: "tutorial", description: "Educational content and guides" },
+  { name: "changelog", description: "Release notes and changelogs" },
+  { name: "showcase", description: "Portfolio and showcase items" },
+  { name: "news", description: "News articles and press releases" },
 ];
 
 const parameters = [

@@ -406,6 +406,12 @@ export async function GET(request: NextRequest) {
     product: { tag: "Product", layout: "center", pattern: "none" },
     event: { tag: "Event", layout: "center", pattern: "diagonal" },
     docs: { tag: "Documentation", layout: "left", pattern: "grid" },
+    // New templates
+    announcement: { tag: "Announcement", layout: "center", pattern: "none" },
+    tutorial: { tag: "Tutorial", layout: "left", pattern: "dots" },
+    changelog: { tag: "Changelog", layout: "left", pattern: "grid" },
+    showcase: { tag: "Showcase", layout: "center", pattern: "diagonal" },
+    news: { tag: "News", layout: "left", pattern: "none" },
   };
 
   const templateConfig = templates[template] || {};

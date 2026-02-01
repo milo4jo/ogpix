@@ -20,6 +20,12 @@ const themes = [
   "ocean",
   "forest",
   "midnight",
+  "aurora",
+  "ember",
+  "neon",
+  "lavender",
+  "mint",
+  "rose",
 ];
 
 const templates = [
@@ -29,6 +35,11 @@ const templates = [
   { id: "product", name: "Product" },
   { id: "event", name: "Event" },
   { id: "docs", name: "Documentation" },
+  { id: "announcement", name: "Announcement" },
+  { id: "tutorial", name: "Tutorial" },
+  { id: "changelog", name: "Changelog" },
+  { id: "showcase", name: "Showcase" },
+  { id: "news", name: "News" },
 ];
 
 const patterns = ["none", "dots", "grid", "diagonal"];

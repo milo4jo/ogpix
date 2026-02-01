@@ -74,7 +74,18 @@ export function OGBuilder() {
     if (debouncedAuthor) params.set("author", debouncedAuthor);
     if (!watermark) params.set("watermark", "false");
     return `/api/og?${params.toString()}`;
-  }, [debouncedTitle, debouncedSubtitle, theme, template, pattern, fontSize, layout, debouncedTag, debouncedAuthor, watermark]);
+  }, [
+    debouncedTitle,
+    debouncedSubtitle,
+    theme,
+    template,
+    pattern,
+    fontSize,
+    layout,
+    debouncedTag,
+    debouncedAuthor,
+    watermark,
+  ]);
 
   // Live URL for copying (uses current values, not debounced)
   const liveUrl = useMemo(() => {

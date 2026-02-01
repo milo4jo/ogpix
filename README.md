@@ -85,11 +85,17 @@ Try the interactive builder at [ogpix.vercel.app](https://ogpix.vercel.app) to p
 
 | Free | Pro (Coming Soon) |
 |------|-------------------|
-| ✓ Unlimited images | ✓ No watermark |
-| ✓ All themes & templates | ✓ Custom fonts |
-| ✓ Full customization | ✓ Priority rendering |
-| ✓ API access | ✓ API analytics |
-| • Includes watermark | $9/mo |
+| ✓ 100 images/month | ✓ Unlimited images |
+| ✓ All themes & templates | ✓ No watermark |
+| ✓ Full customization | ✓ Custom fonts |
+| ✓ API access | ✓ Priority rendering |
+| • Includes watermark | ✓ API analytics |
+| • Rate limited | $9/mo |
+
+**Rate Limits:**
+- Without API key: 100 requests/hour per IP
+- With free API key: 100 images/month
+- Pro: Unlimited
 
 [Join the Pro waitlist →](https://ogpix.vercel.app)
 

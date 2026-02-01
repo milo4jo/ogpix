@@ -52,7 +52,7 @@ function isValidLogoUrl(url: string): boolean {
 
     // Block private/internal IPs and localhost
     const hostname = parsed.hostname.toLowerCase();
-    
+
     // Check for localhost and common internal hostnames
     if (
       hostname === "localhost" ||
@@ -64,7 +64,7 @@ function isValidLogoUrl(url: string): boolean {
     ) {
       return false;
     }
-    
+
     // Check for private IP ranges (RFC 1918)
     if (
       hostname.startsWith("192.168.") ||
@@ -132,11 +132,7 @@ async function trackUsage(
   // Parallel: get user plan AND count usage
   const startOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString();
   const [planResult, usageResult] = await Promise.all([
-    supabase
-      .from("user_plans")
-      .select("monthly_limit")
-      .eq("user_id", keyData.user_id)
-      .single(),
+    supabase.from("user_plans").select("monthly_limit").eq("user_id", keyData.user_id).single(),
     supabase
       .from("usage_logs")
       .select("*", { count: "exact", head: true })
@@ -159,7 +155,10 @@ async function trackUsage(
       theme: theme,
       endpoint: "/api/og",
     }),
-    supabase.from("api_keys").update({ last_used_at: new Date().toISOString() }).eq("id", keyData.id),
+    supabase
+      .from("api_keys")
+      .update({ last_used_at: new Date().toISOString() })
+      .eq("id", keyData.id),
   ]).catch(() => {
     // Silently ignore logging failures - don't block the response
   });
@@ -401,126 +400,124 @@ export async function GET(request: NextRequest) {
   const titleFontSize = getFontSize();
 
   const response = new ImageResponse(
-    (
+    <div
+      style={{
+        height: "100%",
+        width: "100%",
+        display: "flex",
+        flexDirection: "column",
+        background: colors.bg,
+        padding: "60px",
+        position: "relative",
+      }}
+    >
+      {/* Pattern overlay - now using React components */}
+      {finalPattern !== "none" && <PatternOverlay pattern={finalPattern} color={colors.text} />}
+
+      {/* Content */}
       <div
         style={{
-          height: "100%",
-          width: "100%",
           display: "flex",
           flexDirection: "column",
-          background: colors.bg,
-          padding: "60px",
-          position: "relative",
+          flex: 1,
+          justifyContent: finalLayout === "center" ? "center" : "flex-end",
+          alignItems: finalLayout === "center" ? "center" : "flex-start",
+          textAlign: finalLayout === "center" ? "center" : "left",
+          zIndex: 1,
         }}
       >
-        {/* Pattern overlay - now using React components */}
-        {finalPattern !== "none" && <PatternOverlay pattern={finalPattern} color={colors.text} />}
-
-        {/* Content */}
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            flex: 1,
-            justifyContent: finalLayout === "center" ? "center" : "flex-end",
-            alignItems: finalLayout === "center" ? "center" : "flex-start",
-            textAlign: finalLayout === "center" ? "center" : "left",
-            zIndex: 1,
-          }}
-        >
-          {/* Tag */}
-          {finalTag && (
-            <div
-              style={{
-                display: "flex",
-                fontSize: "18px",
-                color: colors.accent,
-                marginBottom: "16px",
-                textTransform: "uppercase",
-                letterSpacing: "2px",
-                fontWeight: 500,
-              }}
-            >
-              {finalTag}
-            </div>
-          )}
-
-          {/* Logo */}
-          {logoUrl && (
-            <img
-              src={logoUrl}
-              width={60}
-              height={60}
-              style={{
-                marginBottom: "24px",
-                borderRadius: "12px",
-              }}
-            />
-          )}
-
-          {/* Title */}
-          <h1
-            style={{
-              fontSize: `${titleFontSize}px`,
-              fontWeight: 700,
-              color: colors.text,
-              margin: 0,
-              lineHeight: 1.2,
-              maxWidth: "1000px",
-            }}
-          >
-            {title}
-          </h1>
-
-          {/* Subtitle */}
-          {subtitle && (
-            <p
-              style={{
-                fontSize: "28px",
-                color: colors.accent,
-                margin: "20px 0 0 0",
-                maxWidth: "800px",
-                lineHeight: 1.4,
-              }}
-            >
-              {subtitle}
-            </p>
-          )}
-
-          {/* Author */}
-          {author && (
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                marginTop: "24px",
-                fontSize: "20px",
-                color: colors.accent,
-              }}
-            >
-              by {author}
-            </div>
-          )}
-        </div>
-
-        {/* Watermark */}
-        {watermark && (
+        {/* Tag */}
+        {finalTag && (
           <div
             style={{
-              position: "absolute",
-              bottom: "40px",
-              right: "60px",
               display: "flex",
-              alignItems: "center",
-              gap: "8px",
-              zIndex: 1,
+              fontSize: "18px",
+              color: colors.accent,
+              marginBottom: "16px",
+              textTransform: "uppercase",
+              letterSpacing: "2px",
+              fontWeight: 500,
             }}
           >
-            <span style={{ fontSize: "16px", color: colors.accent, opacity: 0.6 }}>ogpix.dev</span>
+            {finalTag}
+          </div>
+        )}
+
+        {/* Logo */}
+        {logoUrl && (
+          <img
+            src={logoUrl}
+            width={60}
+            height={60}
+            style={{
+              marginBottom: "24px",
+              borderRadius: "12px",
+            }}
+          />
+        )}
+
+        {/* Title */}
+        <h1
+          style={{
+            fontSize: `${titleFontSize}px`,
+            fontWeight: 700,
+            color: colors.text,
+            margin: 0,
+            lineHeight: 1.2,
+            maxWidth: "1000px",
+          }}
+        >
+          {title}
+        </h1>
+
+        {/* Subtitle */}
+        {subtitle && (
+          <p
+            style={{
+              fontSize: "28px",
+              color: colors.accent,
+              margin: "20px 0 0 0",
+              maxWidth: "800px",
+              lineHeight: 1.4,
+            }}
+          >
+            {subtitle}
+          </p>
+        )}
+
+        {/* Author */}
+        {author && (
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              marginTop: "24px",
+              fontSize: "20px",
+              color: colors.accent,
+            }}
+          >
+            by {author}
           </div>
         )}
       </div>
-    ),
+
+      {/* Watermark */}
+      {watermark && (
+        <div
+          style={{
+            position: "absolute",
+            bottom: "40px",
+            right: "60px",
+            display: "flex",
+            alignItems: "center",
+            gap: "8px",
+            zIndex: 1,
+          }}
+        >
+          <span style={{ fontSize: "16px", color: colors.accent, opacity: 0.6 }}>ogpix.dev</span>
+        </div>
+      )}
+    </div>,
     {
       width: 1200,
       height: 630,
@@ -528,7 +525,10 @@ export async function GET(request: NextRequest) {
   );
 
   // Add cache headers for performance
-  response.headers.set("Cache-Control", "public, max-age=86400, s-maxage=86400, stale-while-revalidate=604800");
+  response.headers.set(
+    "Cache-Control",
+    "public, max-age=86400, s-maxage=86400, stale-while-revalidate=604800"
+  );
 
   return response;
 }

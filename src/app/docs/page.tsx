@@ -41,17 +41,47 @@ const templates = [
 const parameters = [
   { name: "title", type: "string", required: true, description: "Main title text" },
   { name: "subtitle", type: "string", required: false, description: "Secondary text below title" },
-  { name: "theme", type: "string", required: false, description: "Color theme (see Themes section)" },
-  { name: "template", type: "string", required: false, description: "Layout template (see Templates section)" },
-  { name: "pattern", type: "string", required: false, description: "Background pattern: none, dots, grid, diagonal" },
-  { name: "fontSize", type: "string", required: false, description: "Text size: auto, sm, md, lg, xl" },
+  {
+    name: "theme",
+    type: "string",
+    required: false,
+    description: "Color theme (see Themes section)",
+  },
+  {
+    name: "template",
+    type: "string",
+    required: false,
+    description: "Layout template (see Templates section)",
+  },
+  {
+    name: "pattern",
+    type: "string",
+    required: false,
+    description: "Background pattern: none, dots, grid, diagonal",
+  },
+  {
+    name: "fontSize",
+    type: "string",
+    required: false,
+    description: "Text size: auto, sm, md, lg, xl",
+  },
   { name: "layout", type: "string", required: false, description: "Text alignment: center, left" },
   { name: "tag", type: "string", required: false, description: "Small label above title" },
   { name: "author", type: "string", required: false, description: "Author name at bottom" },
   { name: "logo", type: "url", required: false, description: "URL to logo/icon image" },
-  { name: "bg", type: "hex", required: false, description: "Custom background color (e.g., ff5500)" },
+  {
+    name: "bg",
+    type: "hex",
+    required: false,
+    description: "Custom background color (e.g., ff5500)",
+  },
   { name: "text", type: "hex", required: false, description: "Custom text color (e.g., ffffff)" },
-  { name: "watermark", type: "boolean", required: false, description: "Show OGPix watermark (default: true)" },
+  {
+    name: "watermark",
+    type: "boolean",
+    required: false,
+    description: "Show OGPix watermark (default: true)",
+  },
 ];
 
 function CodeBlock({ code, language = "bash" }: { code: string; language?: string }) {
@@ -109,10 +139,7 @@ export default function DocsPage() {
             <span className="text-neutral-500 text-sm hidden sm:inline">Documentation</span>
           </div>
           <div className="flex items-center gap-4">
-            <Link
-              href="/"
-              className="text-sm text-neutral-400 hover:text-white transition-colors"
-            >
+            <Link href="/" className="text-sm text-neutral-400 hover:text-white transition-colors">
               ← Back to App
             </Link>
             {/* Mobile nav toggle */}
@@ -122,9 +149,19 @@ export default function DocsPage() {
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 {mobileNavOpen ? (
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
                 ) : (
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4 6h16M4 12h16M4 18h16"
+                  />
                 )}
               </svg>
             </button>
@@ -158,7 +195,8 @@ export default function DocsPage() {
             <section id="quickstart" className="scroll-mt-24">
               <h1 className="text-3xl sm:text-4xl font-bold mb-4">Quick Start</h1>
               <p className="text-neutral-400 mb-8 text-lg">
-                Generate beautiful Open Graph images with a single API call. No signup required for the free tier.
+                Generate beautiful Open Graph images with a single API call. No signup required for
+                the free tier.
               </p>
 
               <h2 className="text-xl font-semibold mb-4">1. Basic Usage</h2>
@@ -171,9 +209,7 @@ export default function DocsPage() {
               />
 
               <h2 className="text-xl font-semibold mt-8 mb-4">2. With Next.js</h2>
-              <p className="text-neutral-400 mb-4">
-                Use in your metadata export:
-              </p>
+              <p className="text-neutral-400 mb-4">Use in your metadata export:</p>
               <CodeBlock
                 code={`export const metadata = {
   openGraph: {
@@ -184,9 +220,7 @@ export default function DocsPage() {
               />
 
               <h2 className="text-xl font-semibold mt-8 mb-4">3. Download Directly</h2>
-              <p className="text-neutral-400 mb-4">
-                Download the image using curl or fetch:
-              </p>
+              <p className="text-neutral-400 mb-4">Download the image using curl or fetch:</p>
               <CodeBlock
                 code={`curl "https://ogpix.vercel.app/api/og?title=Hello&theme=gradient" -o og.png`}
                 language="bash"
@@ -201,32 +235,32 @@ export default function DocsPage() {
               </p>
 
               <div className="bg-neutral-900 border border-neutral-800 rounded-xl p-6 mb-8">
-                <h3 className="text-lg font-semibold text-green-400 mb-2">✓ Free Tier — No API Key Required</h3>
+                <h3 className="text-lg font-semibold text-green-400 mb-2">
+                  ✓ Free Tier — Get Started Instantly
+                </h3>
                 <p className="text-neutral-400">
-                  The free tier works without any API key. Just use the URL directly. 
-                  Images include a small &quot;ogpix.vercel.app&quot; watermark.
+                  Use without an API key (100 req/hour per IP) or sign up for a free API key (100
+                  images/month). Images include a small &quot;ogpix.vercel.app&quot; watermark.
                 </p>
               </div>
 
               <h2 className="text-xl font-semibold mb-4">Free Tier</h2>
               <ul className="list-disc list-inside text-neutral-400 space-y-2 mb-8">
-                <li>Unlimited image generation</li>
+                <li>100 images per month (with API key)</li>
+                <li>100 requests per hour without API key (IP-based)</li>
                 <li>All themes and templates</li>
                 <li>Full customization options</li>
-                <li>No signup or API key required</li>
                 <li>Small watermark included</li>
               </ul>
 
               <h2 className="text-xl font-semibold mb-4">Pro Tier (Coming Soon)</h2>
-              <p className="text-neutral-400 mb-4">
-                The Pro tier will include:
-              </p>
+              <p className="text-neutral-400 mb-4">The Pro tier will include:</p>
               <ul className="list-disc list-inside text-neutral-400 space-y-2 mb-8">
+                <li>Unlimited image generation</li>
                 <li>No watermark on images</li>
                 <li>Custom fonts</li>
                 <li>Priority rendering</li>
                 <li>API analytics dashboard</li>
-                <li>Personal API key for tracking</li>
               </ul>
 
               <div className="bg-neutral-900 border border-blue-500/30 rounded-xl p-6">
@@ -248,9 +282,7 @@ export default function DocsPage() {
                 code={`https://ogpix.vercel.app/api/og?title=Hello&key=YOUR_API_KEY`}
                 language="text"
               />
-              <p className="text-neutral-400 mt-4 text-sm">
-                Or as an Authorization header:
-              </p>
+              <p className="text-neutral-400 mt-4 text-sm">Or as an Authorization header:</p>
               <CodeBlock
                 code={`curl -H "Authorization: Bearer YOUR_API_KEY" \\
   "https://ogpix.vercel.app/api/og?title=Hello"`}
@@ -273,8 +305,12 @@ export default function DocsPage() {
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="border-b border-neutral-800">
-                      <th className="text-left py-3 pr-4 text-neutral-400 font-medium">Parameter</th>
-                      <th className="text-left py-3 pr-4 text-neutral-400 font-medium hidden sm:table-cell">Type</th>
+                      <th className="text-left py-3 pr-4 text-neutral-400 font-medium">
+                        Parameter
+                      </th>
+                      <th className="text-left py-3 pr-4 text-neutral-400 font-medium hidden sm:table-cell">
+                        Type
+                      </th>
                       <th className="text-left py-3 text-neutral-400 font-medium">Description</th>
                     </tr>
                   </thead>
@@ -283,9 +319,7 @@ export default function DocsPage() {
                       <tr key={param.name} className="border-b border-neutral-800/50">
                         <td className="py-3 pr-4">
                           <code className="text-green-400">{param.name}</code>
-                          {param.required && (
-                            <span className="text-red-400 text-xs ml-1">*</span>
-                          )}
+                          {param.required && <span className="text-red-400 text-xs ml-1">*</span>}
                           <span className="sm:hidden text-neutral-500 text-xs block mt-1">
                             {param.type}
                           </span>
@@ -336,10 +370,7 @@ Cache-Control: public, max-age=31536000, immutable`}
                 Use the <code className="text-green-400">bg</code> and{" "}
                 <code className="text-green-400">text</code> parameters for custom colors:
               </p>
-              <CodeBlock
-                code={`/api/og?title=Custom&bg=1a1a2e&text=eaeaea`}
-                language="text"
-              />
+              <CodeBlock code={`/api/og?title=Custom&bg=1a1a2e&text=eaeaea`} language="text" />
             </section>
 
             {/* Templates */}
@@ -371,9 +402,7 @@ Cache-Control: public, max-age=31536000, immutable`}
             {/* Examples */}
             <section id="examples" className="scroll-mt-24">
               <h1 className="text-3xl sm:text-4xl font-bold mb-4">Examples</h1>
-              <p className="text-neutral-400 mb-8 text-lg">
-                Common use cases and code snippets.
-              </p>
+              <p className="text-neutral-400 mb-8 text-lg">Common use cases and code snippets.</p>
 
               <h2 className="text-xl font-semibold mb-4">Blog Post</h2>
               <CodeBlock

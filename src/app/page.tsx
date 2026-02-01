@@ -76,10 +76,10 @@ export default function Home() {
                 $0<span className="text-lg text-neutral-500">/mo</span>
               </p>
               <ul className="space-y-2 text-neutral-400 text-sm sm:text-base">
-                <li>✓ Unlimited images</li>
+                <li>✓ 100 images/month</li>
                 <li>✓ All themes & templates</li>
                 <li>✓ Full customization</li>
-                <li>✓ No API key required</li>
+                <li>✓ Free API key</li>
                 <li className="text-neutral-600">• Watermark included</li>
               </ul>
             </div>
@@ -92,6 +92,7 @@ export default function Home() {
                 $9<span className="text-lg text-neutral-500">/mo</span>
               </p>
               <ul className="space-y-2 text-neutral-400 text-sm sm:text-base mb-6">
+                <li>✓ Unlimited images</li>
                 <li>✓ No watermark</li>
                 <li>✓ Custom fonts</li>
                 <li>✓ Priority rendering</li>

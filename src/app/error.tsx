@@ -20,8 +20,7 @@ export default function Error({
       <div className="text-center max-w-md">
         <h1 className="text-4xl font-bold mb-4">Something went wrong</h1>
         <p className="text-neutral-400 mb-8">
-          An unexpected error occurred. Please try again or contact support if the problem
-          persists.
+          An unexpected error occurred. Please try again or contact support if the problem persists.
         </p>
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <button
@@ -37,9 +36,7 @@ export default function Error({
             Go home
           </Link>
         </div>
-        {error.digest && (
-          <p className="text-xs text-neutral-600 mt-8">Error ID: {error.digest}</p>
-        )}
+        {error.digest && <p className="text-xs text-neutral-600 mt-8">Error ID: {error.digest}</p>}
       </div>
     </main>
   );

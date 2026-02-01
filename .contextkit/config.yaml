@@ -1,0 +1,19 @@
+version: 1
+sources:
+  - id: src
+    path: ./src
+    patterns:
+      include:
+        - "**/*.ts"
+        - "**/*.js"
+        - "**/*.tsx"
+        - "**/*.jsx"
+        - "**/*.md"
+        - "**/*.json"
+      exclude:
+        - "**/node_modules/**"
+        - "**/dist/**"
+        - "**/.git/**"
+settings:
+  chunk_size: 500
+  chunk_overlap: 50

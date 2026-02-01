@@ -1,11 +1,12 @@
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 import { getServiceClient } from "@/lib/supabase";
+import { authOptions } from "@/lib/auth";
 
 // GET /api/keys - Get user's API keys and usage
 export async function GET() {
   try {
-    const session = await getServerSession();
+    const session = await getServerSession(authOptions);
     if (!session?.user?.id) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
@@ -27,7 +28,6 @@ export async function GET() {
           github_id: githubId,
           email: session.user.email,
           name: session.user.name,
-          avatar_url: session.user.image,
         })
         .select()
         .single();
@@ -43,17 +43,17 @@ export async function GET() {
       });
     }
 
-    // Get user's API keys
+    // Get user's API keys (table only has: id, user_id, key, is_active, created_at)
     const { data: apiKeys } = await supabase
       .from("api_keys")
-      .select("*")
+      .select("id, user_id, key, is_active, created_at")
       .eq("user_id", user.id)
       .eq("is_active", true)
       .order("created_at", { ascending: false });
 
     // Get usage for each key this month
     const keysWithUsage = await Promise.all(
-      (apiKeys || []).map(async (key) => {
+      (apiKeys || []).map(async (key, index) => {
         const { count } = await supabase
           .from("usage_logs")
           .select("*", { count: "exact", head: true })
@@ -63,7 +63,16 @@ export async function GET() {
             new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString()
           );
 
-        return { ...key, usage_count: count || 0 };
+        // Generate a friendly name based on key prefix or index
+        const keyPrefix = key.key.split("_")[0];
+        const name = keyPrefix === "ogpix" ? `API Key ${index + 1}` : `${keyPrefix} Key`;
+
+        return {
+          ...key,
+          name,
+          usage_count: count || 0,
+          last_used_at: null, // Not tracked in DB yet
+        };
       })
     );
 
@@ -96,12 +105,13 @@ export async function GET() {
 // POST /api/keys - Create a new API key
 export async function POST(request: Request) {
   try {
-    const session = await getServerSession();
+    const session = await getServerSession(authOptions);
     if (!session?.user?.id) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { name } = await request.json().catch(() => ({ name: "Default" }));
+    // Name is ignored - DB doesn't have this column yet
+    await request.json().catch(() => ({}));
 
     const supabase = getServiceClient();
     const githubId = session.user.id;
@@ -120,19 +130,26 @@ export async function POST(request: Request) {
     // Generate new API key
     const key = `ogpix_${crypto.randomUUID().replace(/-/g, "")}`;
 
+    // Insert without 'name' - column doesn't exist in DB
     const { data: apiKey, error } = await supabase
       .from("api_keys")
       .insert({
         user_id: user.id,
         key,
-        name: name || "Default",
       })
       .select()
       .single();
 
     if (error) throw error;
 
-    return NextResponse.json({ apiKey });
+    return NextResponse.json({ 
+      apiKey: {
+        ...apiKey,
+        name: "New API Key",
+        usage_count: 0,
+        last_used_at: null,
+      }
+    });
   } catch (error) {
     console.error("Error creating key:", error);
     return NextResponse.json({ error: "Failed to create API key" }, { status: 500 });
@@ -142,7 +159,7 @@ export async function POST(request: Request) {
 // DELETE /api/keys - Deactivate an API key
 export async function DELETE(request: Request) {
   try {
-    const session = await getServerSession();
+    const session = await getServerSession(authOptions);
     if (!session?.user?.id) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }

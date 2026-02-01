@@ -2,7 +2,7 @@ import { createClient, SupabaseClient } from "@supabase/supabase-js";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_KEY;
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 // Lazy-initialized clients to avoid build-time errors
 let _supabase: SupabaseClient | null = null;
@@ -33,7 +33,7 @@ export function getServiceClient(): SupabaseClient {
       throw new Error("NEXT_PUBLIC_SUPABASE_URL not configured");
     }
     if (!supabaseServiceKey) {
-      throw new Error("SUPABASE_SERVICE_KEY not configured");
+      throw new Error("SUPABASE_SERVICE_ROLE_KEY not configured");
     }
     _serviceClient = createClient(supabaseUrl, supabaseServiceKey);
   }
@@ -41,14 +41,18 @@ export function getServiceClient(): SupabaseClient {
 }
 
 // Types for our database tables
+// Note: DB schema has: id, user_id, key, is_active, created_at
+// name and last_used_at are generated/placeholder in API response
 export interface ApiKey {
   id: string;
   user_id: string;
   key: string;
-  name: string;
-  created_at: string;
-  last_used_at: string | null;
   is_active: boolean;
+  created_at: string;
+  // These are added in API response, not in DB
+  name?: string;
+  last_used_at?: string | null;
+  usage_count?: number;
 }
 
 export interface UsageLog {

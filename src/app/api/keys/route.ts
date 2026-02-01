@@ -2,6 +2,7 @@ import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 import { getServiceClient } from "@/lib/supabase";
 import { authOptions } from "@/lib/auth";
+import { sendWelcomeEmail } from "@/lib/email";
 
 // GET /api/keys - Get user's API keys and usage
 export async function GET() {
@@ -13,6 +14,7 @@ export async function GET() {
 
     const supabase = getServiceClient();
     const githubId = session.user.id;
+    let isNewUser = false;
 
     // Get or create user
     let { data: user } = await supabase
@@ -22,6 +24,7 @@ export async function GET() {
       .single();
 
     if (!user) {
+      isNewUser = true;
       const { data: newUser, error } = await supabase
         .from("users")
         .insert({
@@ -41,6 +44,13 @@ export async function GET() {
         plan: "free",
         monthly_limit: 500,
       });
+
+      // Send welcome email (async, don't block response)
+      if (session.user.email) {
+        sendWelcomeEmail(session.user.email, session.user.name || "").catch(() => {
+          // Silently ignore email failures
+        });
+      }
     }
 
     // Get user's API keys (table only has: id, user_id, key, is_active, created_at)
@@ -95,6 +105,7 @@ export async function GET() {
       plan: plan || { plan: "free", monthly_limit: 500 },
       apiKeys: keysWithUsage,
       totalUsage,
+      isNewUser,
     });
   } catch (error) {
     console.error("Error fetching keys:", error);

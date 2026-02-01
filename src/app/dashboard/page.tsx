@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useEffect, useState, useCallback } from "react";
 import { Navbar } from "@/components/Navbar";
+import { WelcomeModal } from "@/components/WelcomeModal";
 
 interface ApiKey {
   id: string;
@@ -20,6 +21,7 @@ interface DashboardData {
   plan: { plan: string; monthly_limit: number };
   apiKeys: ApiKey[];
   totalUsage: number;
+  isNewUser?: boolean;
 }
 
 export default function DashboardPage() {
@@ -30,6 +32,7 @@ export default function DashboardPage() {
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState<string | null>(null);
   const [creating, setCreating] = useState(false);
+  const [showWelcome, setShowWelcome] = useState(false);
 
   const fetchData = useCallback(async () => {
     try {
@@ -45,6 +48,11 @@ export default function DashboardPage() {
       }
       const json = await res.json();
       setData(json);
+      
+      // Show welcome modal for new users (or users with no API keys)
+      if (json.isNewUser || (json.apiKeys?.length === 0 && !localStorage.getItem("ogpix_onboarded"))) {
+        setShowWelcome(true);
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to load dashboard data");
       console.error(err);
@@ -133,9 +141,26 @@ export default function DashboardPage() {
 
   const usagePercent = Math.min(100, ((data?.totalUsage || 0) / (data?.plan?.monthly_limit || 500)) * 100);
 
+  const handleCloseWelcome = () => {
+    setShowWelcome(false);
+    localStorage.setItem("ogpix_onboarded", "true");
+  };
+
   return (
     <main className="min-h-screen bg-black text-white">
       <Navbar />
+      
+      {/* Welcome Modal for new users */}
+      {showWelcome && (
+        <WelcomeModal
+          userName={session.user?.name || ""}
+          onClose={handleCloseWelcome}
+          onCreateKey={() => {
+            handleCloseWelcome();
+            generateApiKey();
+          }}
+        />
+      )}
       
       <div className="max-w-5xl mx-auto px-6 py-8 sm:py-12">
         {/* Header */}

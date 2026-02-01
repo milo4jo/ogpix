@@ -1,6 +1,7 @@
 "use client";
 
 import { signIn } from "next-auth/react";
+import Link from "next/link";
 
 export default function LoginPage() {
   return (
@@ -27,9 +28,9 @@ export default function LoginPage() {
           By signing in, you agree to our Terms of Service and Privacy Policy.
         </p>
 
-        <a href="/" className="text-sm text-neutral-400 hover:text-white">
+        <Link href="/" className="text-sm text-neutral-400 hover:text-white">
           ← Back to home
-        </a>
+        </Link>
       </div>
     </main>
   );

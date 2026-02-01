@@ -64,11 +64,9 @@ function CodeBlock({ code, language = "bash" }: { code: string; language?: strin
   };
 
   return (
-    <div className="relative group">
+    <div className="relative group max-w-full overflow-hidden">
       <pre className="bg-neutral-900 border border-neutral-800 rounded-lg p-4 overflow-x-auto text-sm">
-        <code className="text-green-400 whitespace-pre-wrap break-all sm:whitespace-pre sm:break-normal">
-          {code}
-        </code>
+        <code className="text-green-400 whitespace-pre">{code}</code>
       </pre>
       <button
         onClick={handleCopy}
@@ -155,7 +153,7 @@ export default function DocsPage() {
           </nav>
 
           {/* Main Content */}
-          <main className="py-6 lg:py-8 space-y-16">
+          <main className="py-6 lg:py-8 space-y-16 min-w-0">
             {/* Quick Start */}
             <section id="quickstart" className="scroll-mt-24">
               <h1 className="text-3xl sm:text-4xl font-bold mb-4">Quick Start</h1>

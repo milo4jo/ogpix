@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 
 const sections = [
@@ -84,7 +84,7 @@ const parameters = [
   },
 ];
 
-function CodeBlock({ code, language = "bash" }: { code: string; language?: string }) {
+function CodeBlock({ code, language: _language = "bash" }: { code: string; language?: string }) {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = () => {
@@ -126,6 +126,25 @@ function NavLink({ id, label, active }: { id: string; label: string; active: boo
 export default function DocsPage() {
   const [activeSection, setActiveSection] = useState("quickstart");
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
+
+  // Track scroll position to update active section
+  useEffect(() => {
+    const handleScroll = () => {
+      const sectionIds = sections.map((s) => s.id);
+      const scrollPosition = window.scrollY + 150; // Offset for header
+
+      for (let i = sectionIds.length - 1; i >= 0; i--) {
+        const element = document.getElementById(sectionIds[i]);
+        if (element && element.offsetTop <= scrollPosition) {
+          setActiveSection(sectionIds[i]);
+          break;
+        }
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
     <div className="min-h-screen bg-black text-white">

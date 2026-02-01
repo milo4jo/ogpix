@@ -9,7 +9,7 @@ export default function Home() {
       <Navbar />
 
       {/* Hero */}
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 pt-24 sm:pt-32 pb-16 sm:pb-24">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 pt-12 sm:pt-20 pb-16 sm:pb-24">
         <div className="text-center mb-16">
           <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight mb-6">
             OG Images.
@@ -113,37 +113,17 @@ export default function Home() {
 
       {/* Footer */}
       <div className="border-t border-neutral-900">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-neutral-500">
-            <div className="flex items-center gap-4">
-              <Link href="/docs" className="hover:text-white transition-colors">
-                Docs
-              </Link>
-              <Link href="/editor" className="hover:text-white transition-colors">
-                Editor
-              </Link>
-              <a
-                href="https://github.com/milo4jo/ogpix"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-white transition-colors"
-              >
-                GitHub
-              </a>
-            </div>
-            <div>
-              Built by{" "}
-              <a
-                href="https://milo-site-self.vercel.app"
-                className="text-white hover:text-neutral-300 transition-colors"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Milo
-              </a>{" "}
-              🦊
-            </div>
-          </div>
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 text-center text-sm text-neutral-500">
+          Built by{" "}
+          <a
+            href="https://milo-site-self.vercel.app"
+            className="text-white hover:text-neutral-300 transition-colors"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Milo
+          </a>{" "}
+          🦊
         </div>
       </div>
     </main>

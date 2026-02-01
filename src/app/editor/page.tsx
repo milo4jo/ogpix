@@ -15,16 +15,11 @@ export default function EditorPage() {
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-8 sm:pt-12 pb-12 sm:pb-16">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h1 className="text-2xl sm:text-3xl font-bold">OG Image Editor</h1>
-            <p className="text-neutral-400 mt-1">
-              Full customization with 21 themes and 10 templates
-            </p>
-          </div>
-          <Link href="/" className="text-sm text-neutral-400 hover:text-white transition-colors">
-            ← Back
-          </Link>
+        <div className="mb-8">
+          <h1 className="text-2xl sm:text-3xl font-bold">OG Image Editor</h1>
+          <p className="text-neutral-400 mt-1">
+            Full customization with 21 themes and 10 templates
+          </p>
         </div>
 
         {/* Full OGBuilder */}

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { Navbar } from "@/components/Navbar";
 
 const sections = [
   { id: "quickstart", label: "Quick Start" },
@@ -137,7 +138,7 @@ function CodeBlock({ code, language: _language = "bash" }: { code: string; langu
   );
 }
 
-function NavLink({ id, label, active }: { id: string; label: string; active: boolean }) {
+function SidebarLink({ id, label, active }: { id: string; label: string; active: boolean }) {
   return (
     <a
       href={`#${id}`}
@@ -160,7 +161,7 @@ export default function DocsPage() {
   useEffect(() => {
     const handleScroll = () => {
       const sectionIds = sections.map((s) => s.id);
-      const scrollPosition = window.scrollY + 150; // Offset for header
+      const scrollPosition = window.scrollY + 120; // Offset for navbar
 
       for (let i = sectionIds.length - 1; i >= 0; i--) {
         const element = document.getElementById(sectionIds[i]);
@@ -177,70 +178,56 @@ export default function DocsPage() {
 
   return (
     <div className="min-h-screen bg-black text-white">
-      {/* Header */}
-      <header className="sticky top-0 z-50 bg-black/90 backdrop-blur border-b border-neutral-800">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Link href="/" className="text-xl font-bold">
-              OGPix
-            </Link>
-            <span className="text-neutral-500 text-sm hidden sm:inline">Documentation</span>
-          </div>
-          <div className="flex items-center gap-4">
-            <Link href="/" className="text-sm text-neutral-400 hover:text-white transition-colors">
-              ← Back to App
-            </Link>
-            {/* Mobile nav toggle */}
+      {/* Global Navbar */}
+      <Navbar />
+
+      {/* Docs Layout */}
+      <div className="max-w-6xl mx-auto px-4 sm:px-6">
+        <div className="lg:grid lg:grid-cols-[220px_1fr] lg:gap-8">
+          {/* Sidebar Navigation */}
+          <aside className="lg:sticky lg:top-[72px] lg:h-[calc(100vh-72px)] lg:py-8">
+            {/* Mobile toggle */}
             <button
               onClick={() => setMobileNavOpen(!mobileNavOpen)}
-              className="lg:hidden p-2 text-neutral-400 hover:text-white"
+              className="lg:hidden w-full flex items-center justify-between py-4 text-neutral-400 hover:text-white"
             >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                {mobileNavOpen ? (
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                ) : (
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4 6h16M4 12h16M4 18h16"
-                  />
-                )}
+              <span className="text-sm font-medium">
+                {sections.find((s) => s.id === activeSection)?.label || "Navigation"}
+              </span>
+              <svg
+                className={`w-5 h-5 transition-transform ${mobileNavOpen ? "rotate-180" : ""}`}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M19 9l-7 7-7-7"
+                />
               </svg>
             </button>
-          </div>
-        </div>
-      </header>
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6">
-        <div className="lg:grid lg:grid-cols-[240px_1fr] lg:gap-8">
-          {/* Sidebar Navigation */}
-          <nav
-            className={`${
-              mobileNavOpen ? "block" : "hidden"
-            } lg:block py-6 lg:py-8 lg:sticky lg:top-20 lg:h-fit`}
-          >
-            <div className="space-y-1">
+            {/* Sidebar links */}
+            <nav
+              className={`${mobileNavOpen ? "block" : "hidden"} lg:block space-y-1 pb-4 lg:pb-0`}
+            >
               {sections.map((section) => (
-                <NavLink
+                <SidebarLink
                   key={section.id}
                   id={section.id}
                   label={section.label}
                   active={activeSection === section.id}
                 />
               ))}
-            </div>
-          </nav>
+            </nav>
+          </aside>
 
           {/* Main Content */}
-          <main className="py-6 lg:py-8 space-y-16 min-w-0">
+          <main className="py-8 space-y-16 min-w-0">
             {/* Quick Start */}
-            <section id="quickstart" className="scroll-mt-24">
+            <section id="quickstart" className="scroll-mt-20">
               <h1 className="text-3xl sm:text-4xl font-bold mb-4">Quick Start</h1>
               <p className="text-neutral-400 mb-8 text-lg">
                 Generate beautiful Open Graph images with a single API call. No signup required for
@@ -276,7 +263,7 @@ export default function DocsPage() {
             </section>
 
             {/* API Keys */}
-            <section id="api-keys" className="scroll-mt-24">
+            <section id="api-keys" className="scroll-mt-20">
               <h1 className="text-3xl sm:text-4xl font-bold mb-4">API Keys</h1>
               <p className="text-neutral-400 mb-8 text-lg">
                 Understanding when and how to use API keys with OGPix.
@@ -339,7 +326,7 @@ export default function DocsPage() {
             </section>
 
             {/* API Reference */}
-            <section id="api-reference" className="scroll-mt-24">
+            <section id="api-reference" className="scroll-mt-20">
               <h1 className="text-3xl sm:text-4xl font-bold mb-4">API Reference</h1>
               <p className="text-neutral-400 mb-8 text-lg">
                 Complete reference for all API parameters.
@@ -395,10 +382,10 @@ Cache-Control: public, max-age=31536000, immutable`}
             </section>
 
             {/* Themes */}
-            <section id="themes" className="scroll-mt-24">
+            <section id="themes" className="scroll-mt-20">
               <h1 className="text-3xl sm:text-4xl font-bold mb-4">Themes</h1>
               <p className="text-neutral-400 mb-8 text-lg">
-                15 built-in color themes for your images.
+                21 built-in color themes for your images.
               </p>
 
               <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -422,7 +409,7 @@ Cache-Control: public, max-age=31536000, immutable`}
             </section>
 
             {/* Templates */}
-            <section id="templates" className="scroll-mt-24">
+            <section id="templates" className="scroll-mt-20">
               <h1 className="text-3xl sm:text-4xl font-bold mb-4">Templates</h1>
               <p className="text-neutral-400 mb-8 text-lg">
                 Pre-designed layouts for common use cases.
@@ -448,7 +435,7 @@ Cache-Control: public, max-age=31536000, immutable`}
             </section>
 
             {/* Examples */}
-            <section id="examples" className="scroll-mt-24">
+            <section id="examples" className="scroll-mt-20">
               <h1 className="text-3xl sm:text-4xl font-bold mb-4">Examples</h1>
               <p className="text-neutral-400 mb-8 text-lg">Common use cases and code snippets.</p>
 
@@ -495,7 +482,7 @@ export async function generateMetadata({ params }): Promise<Metadata> {
               />
             </section>
 
-            {/* Footer */}
+            {/* Mini Footer */}
             <footer className="pt-8 border-t border-neutral-800 text-center text-neutral-500 text-sm">
               <p>
                 Built by{" "}
@@ -508,20 +495,6 @@ export async function generateMetadata({ params }): Promise<Metadata> {
                   Milo
                 </a>{" "}
                 🦊
-              </p>
-              <p className="mt-2">
-                <Link href="/" className="hover:text-white">
-                  Back to OGPix
-                </Link>
-                {" · "}
-                <a
-                  href="https://github.com/milo4jo/ogpix"
-                  className="hover:text-white"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  GitHub
-                </a>
               </p>
             </footer>
           </main>

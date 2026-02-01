@@ -8,7 +8,10 @@ export const runtime = "edge";
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_KEY;
 
-async function trackUsage(apiKey: string, theme: string): Promise<{ allowed: boolean; usage: number; limit: number }> {
+async function trackUsage(
+  apiKey: string,
+  theme: string
+): Promise<{ allowed: boolean; usage: number; limit: number }> {
   if (!supabaseUrl || !supabaseServiceKey) {
     // No Supabase configured - allow all (development mode)
     return { allowed: true, usage: 0, limit: 100 };
@@ -79,21 +82,22 @@ export async function GET(request: NextRequest) {
 
   // API Key for usage tracking
   const apiKey = searchParams.get("key");
-  
+
   // Check API key and rate limiting if provided
   if (apiKey) {
     const theme = searchParams.get("theme") || "dark";
     const { allowed, usage, limit } = await trackUsage(apiKey, theme);
-    
+
     if (!allowed) {
       return NextResponse.json(
-        { 
+        {
           error: "Rate limit exceeded or invalid API key",
           usage,
           limit,
-          message: usage >= limit 
-            ? `Monthly limit of ${limit} images reached. Upgrade to Pro for more.`
-            : "Invalid or inactive API key"
+          message:
+            usage >= limit
+              ? `Monthly limit of ${limit} images reached. Upgrade to Pro for more.`
+              : "Invalid or inactive API key",
         },
         { status: 429 }
       );
@@ -104,7 +108,7 @@ export async function GET(request: NextRequest) {
   const title = searchParams.get("title") || "Hello World";
   const subtitle = searchParams.get("subtitle") || "";
   const theme = searchParams.get("theme") || "dark";
-  
+
   // Advanced customization
   const bgColor = searchParams.get("bg") || "";
   const textColor = searchParams.get("text") || "";
@@ -116,7 +120,7 @@ export async function GET(request: NextRequest) {
   const tag = searchParams.get("tag") || "";
   const author = searchParams.get("author") || "";
   const watermark = searchParams.get("watermark") !== "false";
-  
+
   // Template presets
   const template = searchParams.get("template") || "";
 
@@ -124,7 +128,11 @@ export async function GET(request: NextRequest) {
   const themes: Record<string, { bg: string; text: string; accent: string }> = {
     dark: { bg: "#000000", text: "#ffffff", accent: "#888888" },
     light: { bg: "#ffffff", text: "#000000", accent: "#666666" },
-    gradient: { bg: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)", text: "#ffffff", accent: "#ffffffcc" },
+    gradient: {
+      bg: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+      text: "#ffffff",
+      accent: "#ffffffcc",
+    },
     blue: { bg: "#0070f3", text: "#ffffff", accent: "#ffffffcc" },
     green: { bg: "#10b981", text: "#ffffff", accent: "#ffffffcc" },
     purple: { bg: "#8b5cf6", text: "#ffffff", accent: "#ffffffcc" },
@@ -133,10 +141,26 @@ export async function GET(request: NextRequest) {
     cyan: { bg: "#06b6d4", text: "#ffffff", accent: "#ffffffcc" },
     slate: { bg: "#1e293b", text: "#f8fafc", accent: "#94a3b8" },
     zinc: { bg: "#18181b", text: "#fafafa", accent: "#71717a" },
-    sunset: { bg: "linear-gradient(135deg, #f97316 0%, #ec4899 100%)", text: "#ffffff", accent: "#ffffffcc" },
-    ocean: { bg: "linear-gradient(135deg, #0ea5e9 0%, #8b5cf6 100%)", text: "#ffffff", accent: "#ffffffcc" },
-    forest: { bg: "linear-gradient(135deg, #22c55e 0%, #14b8a6 100%)", text: "#ffffff", accent: "#ffffffcc" },
-    midnight: { bg: "linear-gradient(135deg, #1e293b 0%, #0f172a 100%)", text: "#f8fafc", accent: "#94a3b8" },
+    sunset: {
+      bg: "linear-gradient(135deg, #f97316 0%, #ec4899 100%)",
+      text: "#ffffff",
+      accent: "#ffffffcc",
+    },
+    ocean: {
+      bg: "linear-gradient(135deg, #0ea5e9 0%, #8b5cf6 100%)",
+      text: "#ffffff",
+      accent: "#ffffffcc",
+    },
+    forest: {
+      bg: "linear-gradient(135deg, #22c55e 0%, #14b8a6 100%)",
+      text: "#ffffff",
+      accent: "#ffffffcc",
+    },
+    midnight: {
+      bg: "linear-gradient(135deg, #1e293b 0%, #0f172a 100%)",
+      text: "#f8fafc",
+      accent: "#94a3b8",
+    },
   };
 
   // Template presets
@@ -160,8 +184,6 @@ export async function GET(request: NextRequest) {
     accent: accentColor || baseColors.accent,
   };
 
-  const isGradient = colors.bg.includes("gradient");
-
   // Font size calculation
   const getFontSize = () => {
     if (fontSize === "sm") return 48;
@@ -178,140 +200,138 @@ export async function GET(request: NextRequest) {
   const titleFontSize = getFontSize();
 
   return new ImageResponse(
-    (
+    <div
+      style={{
+        height: "100%",
+        width: "100%",
+        display: "flex",
+        flexDirection: "column",
+        background: colors.bg,
+        padding: "60px",
+        position: "relative",
+      }}
+    >
+      {/* Pattern overlay */}
+      {finalPattern !== "none" && (
+        <svg
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            color: colors.text,
+          }}
+          dangerouslySetInnerHTML={{
+            __html: patterns[finalPattern as keyof typeof patterns] || "",
+          }}
+        />
+      )}
+
+      {/* Content */}
       <div
         style={{
-          height: "100%",
-          width: "100%",
           display: "flex",
           flexDirection: "column",
-          background: colors.bg,
-          padding: "60px",
-          position: "relative",
+          flex: 1,
+          justifyContent: finalLayout === "center" ? "center" : "flex-end",
+          alignItems: finalLayout === "center" ? "center" : "flex-start",
+          textAlign: finalLayout === "center" ? "center" : "left",
+          zIndex: 1,
         }}
       >
-        {/* Pattern overlay */}
-        {finalPattern !== "none" && (
-          <svg
+        {/* Tag */}
+        {finalTag && (
+          <div
             style={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-              width: "100%",
-              height: "100%",
-              color: colors.text,
+              display: "flex",
+              fontSize: "18px",
+              color: colors.accent,
+              marginBottom: "16px",
+              textTransform: "uppercase",
+              letterSpacing: "2px",
+              fontWeight: 500,
             }}
-            dangerouslySetInnerHTML={{ __html: patterns[finalPattern as keyof typeof patterns] || "" }}
+          >
+            {finalTag}
+          </div>
+        )}
+
+        {/* Logo */}
+        {logoUrl && (
+          <img
+            src={logoUrl}
+            width={60}
+            height={60}
+            style={{
+              marginBottom: "24px",
+              borderRadius: "12px",
+            }}
           />
         )}
 
-        {/* Content */}
-        <div
+        {/* Title */}
+        <h1
           style={{
-            display: "flex",
-            flexDirection: "column",
-            flex: 1,
-            justifyContent: finalLayout === "center" ? "center" : "flex-end",
-            alignItems: finalLayout === "center" ? "center" : "flex-start",
-            textAlign: finalLayout === "center" ? "center" : "left",
-            zIndex: 1,
+            fontSize: `${titleFontSize}px`,
+            fontWeight: 700,
+            color: colors.text,
+            margin: 0,
+            lineHeight: 1.2,
+            maxWidth: "1000px",
           }}
         >
-          {/* Tag */}
-          {finalTag && (
-            <div
-              style={{
-                display: "flex",
-                fontSize: "18px",
-                color: colors.accent,
-                marginBottom: "16px",
-                textTransform: "uppercase",
-                letterSpacing: "2px",
-                fontWeight: 500,
-              }}
-            >
-              {finalTag}
-            </div>
-          )}
+          {title}
+        </h1>
 
-          {/* Logo */}
-          {logoUrl && (
-            <img
-              src={logoUrl}
-              width={60}
-              height={60}
-              style={{
-                marginBottom: "24px",
-                borderRadius: "12px",
-              }}
-            />
-          )}
-
-          {/* Title */}
-          <h1
+        {/* Subtitle */}
+        {subtitle && (
+          <p
             style={{
-              fontSize: `${titleFontSize}px`,
-              fontWeight: 700,
-              color: colors.text,
-              margin: 0,
-              lineHeight: 1.2,
-              maxWidth: "1000px",
+              fontSize: "28px",
+              color: colors.accent,
+              margin: "20px 0 0 0",
+              maxWidth: "800px",
+              lineHeight: 1.4,
             }}
           >
-            {title}
-          </h1>
+            {subtitle}
+          </p>
+        )}
 
-          {/* Subtitle */}
-          {subtitle && (
-            <p
-              style={{
-                fontSize: "28px",
-                color: colors.accent,
-                margin: "20px 0 0 0",
-                maxWidth: "800px",
-                lineHeight: 1.4,
-              }}
-            >
-              {subtitle}
-            </p>
-          )}
-
-          {/* Author */}
-          {author && (
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                marginTop: "24px",
-                fontSize: "20px",
-                color: colors.accent,
-              }}
-            >
-              by {author}
-            </div>
-          )}
-        </div>
-
-        {/* Watermark */}
-        {watermark && (
+        {/* Author */}
+        {author && (
           <div
             style={{
-              position: "absolute",
-              bottom: "40px",
-              right: "60px",
               display: "flex",
               alignItems: "center",
-              gap: "8px",
-              zIndex: 1,
+              marginTop: "24px",
+              fontSize: "20px",
+              color: colors.accent,
             }}
           >
-            <span style={{ fontSize: "16px", color: colors.accent, opacity: 0.6 }}>
-              ogpix.dev
-            </span>
+            by {author}
           </div>
         )}
       </div>
-    ),
+
+      {/* Watermark */}
+      {watermark && (
+        <div
+          style={{
+            position: "absolute",
+            bottom: "40px",
+            right: "60px",
+            display: "flex",
+            alignItems: "center",
+            gap: "8px",
+            zIndex: 1,
+          }}
+        >
+          <span style={{ fontSize: "16px", color: colors.accent, opacity: 0.6 }}>ogpix.dev</span>
+        </div>
+      )}
+    </div>,
     {
       width: 1200,
       height: 630,

@@ -147,10 +147,10 @@ export default function DashboardPage() {
               of {data?.plan.monthly_limit || 100} free/month
             </div>
             <div className="mt-2 h-1.5 bg-neutral-800 rounded-full overflow-hidden">
-              <div 
+              <div
                 className="h-full bg-blue-500 rounded-full transition-all"
-                style={{ 
-                  width: `${Math.min(100, ((data?.totalUsage || 0) / (data?.plan.monthly_limit || 100)) * 100)}%` 
+                style={{
+                  width: `${Math.min(100, ((data?.totalUsage || 0) / (data?.plan.monthly_limit || 100)) * 100)}%`,
                 }}
               />
             </div>
@@ -185,10 +185,7 @@ export default function DashboardPage() {
           {data?.apiKeys && data.apiKeys.length > 0 ? (
             <div className="space-y-3">
               {data.apiKeys.map((apiKey) => (
-                <div
-                  key={apiKey.id}
-                  className="flex items-center gap-4 bg-black rounded-lg p-4"
-                >
+                <div key={apiKey.id} className="flex items-center gap-4 bg-black rounded-lg p-4">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
                       <span className="font-medium text-sm">{apiKey.name}</span>
@@ -257,9 +254,7 @@ ${data?.apiKeys[0]?.key ? `url.searchParams.set('key', '${data.apiKeys[0].key}')
                 <tbody>
                   {data.apiKeys.map((key) => (
                     <tr key={key.id} className="border-b border-neutral-800/50">
-                      <td className="py-3 font-mono text-neutral-400">
-                        {key.key.slice(0, 12)}...
-                      </td>
+                      <td className="py-3 font-mono text-neutral-400">{key.key.slice(0, 12)}...</td>
                       <td className="py-3">{key.usage_count}</td>
                       <td className="py-3 text-neutral-500">
                         {key.last_used_at

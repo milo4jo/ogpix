@@ -10,7 +10,8 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: "OGPix — Instant OG Image API",
-  description: "Generate beautiful Open Graph images with a single API call. No design skills needed.",
+  description:
+    "Generate beautiful Open Graph images with a single API call. No design skills needed.",
   openGraph: {
     title: "OGPix — Instant OG Image API",
     description: "Generate beautiful Open Graph images with a single API call.",

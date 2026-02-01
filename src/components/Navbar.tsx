@@ -33,12 +33,7 @@ export function Navbar() {
               className="flex items-center gap-2 px-3 py-1.5 bg-neutral-900 border border-neutral-800 rounded-lg text-sm hover:bg-neutral-800 transition-colors"
             >
               {session.user?.image && (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={session.user.image}
-                  alt=""
-                  className="w-5 h-5 rounded-full"
-                />
+                <img src={session.user.image} alt="" className="w-5 h-5 rounded-full" />
               )}
               Dashboard
             </Link>

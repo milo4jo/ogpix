@@ -58,7 +58,10 @@ export async function GET() {
           .from("usage_logs")
           .select("*", { count: "exact", head: true })
           .eq("api_key_id", key.id)
-          .gte("created_at", new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString());
+          .gte(
+            "created_at",
+            new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString()
+          );
 
         return { ...key, usage_count: count || 0 };
       })
@@ -86,10 +89,7 @@ export async function GET() {
     });
   } catch (error) {
     console.error("Error fetching keys:", error);
-    return NextResponse.json(
-      { error: "Failed to fetch data" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to fetch data" }, { status: 500 });
   }
 }
 
@@ -135,10 +135,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ apiKey });
   } catch (error) {
     console.error("Error creating key:", error);
-    return NextResponse.json(
-      { error: "Failed to create API key" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to create API key" }, { status: 500 });
   }
 }
 
@@ -181,9 +178,6 @@ export async function DELETE(request: Request) {
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("Error deleting key:", error);
-    return NextResponse.json(
-      { error: "Failed to delete API key" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to delete API key" }, { status: 500 });
   }
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import { Navbar } from "@/components/Navbar";
 
 const themes = [
   "dark", "light", "gradient", "blue", "green", "purple", 
@@ -52,8 +53,9 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-black text-white">
+      <Navbar />
       {/* Hero */}
-      <div className="max-w-6xl mx-auto px-6 py-16">
+      <div className="max-w-6xl mx-auto px-6 pt-24 pb-16">
         <div className="text-center mb-16">
           <h1 className="text-5xl sm:text-6xl font-bold tracking-tight mb-4">
             OG Images.
@@ -366,12 +368,12 @@ ogUrl.searchParams.set('theme', 'gradient');`}</code>
                 Coming Soon
               </div>
               <h3 className="text-lg font-semibold mb-2">Pro</h3>
-              <p className="text-3xl font-bold mb-4">$5<span className="text-lg text-neutral-500">/mo</span></p>
+              <p className="text-3xl font-bold mb-4">$9<span className="text-lg text-neutral-500">/mo</span></p>
               <ul className="space-y-2 text-neutral-400">
-                <li>✓ Everything in Free</li>
+                <li>✓ 1,000 images/month</li>
                 <li>✓ No watermark</li>
                 <li>✓ Custom fonts</li>
-                <li>✓ Priority support</li>
+                <li>✓ Priority rendering</li>
                 <li>✓ API analytics</li>
               </ul>
             </div>

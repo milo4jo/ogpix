@@ -20,6 +20,7 @@ export function Navbar() {
           <a
             href="https://github.com/milo4jo/ogpix"
             target="_blank"
+            rel="noopener noreferrer"
             className="text-sm text-neutral-400 hover:text-white"
           >
             GitHub
@@ -33,7 +34,13 @@ export function Navbar() {
               className="flex items-center gap-2 px-3 py-1.5 bg-neutral-900 border border-neutral-800 rounded-lg text-sm hover:bg-neutral-800 transition-colors"
             >
               {session.user?.image && (
-                <img src={session.user.image} alt="" className="w-5 h-5 rounded-full" />
+                <img
+                  src={session.user.image}
+                  alt=""
+                  width={20}
+                  height={20}
+                  className="w-5 h-5 rounded-full"
+                />
               )}
               Dashboard
             </Link>

@@ -1,36 +1,123 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# OGPix
 
-## Getting Started
+**Instant Open Graph Image API** — Generate beautiful social images with a single URL.
 
-First, run the development server:
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fmilo4jo%2Fogpix)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+<p align="center">
+  <img src="https://ogpix.vercel.app/api/og?title=OGPix&subtitle=Instant+OG+Image+API&theme=gradient" alt="OGPix Demo" width="600" />
+</p>
+
+## ✨ Features
+
+- **15+ Themes** — Dark, light, gradient, and color themes
+- **5 Templates** — Blog, GitHub, Product, Event, Documentation
+- **Full Customization** — Colors, patterns, fonts, layouts
+- **Instant API** — No signup, no API key required for free tier
+- **Edge Rendered** — Fast response times globally
+
+## 🚀 Quick Start
+
+Just add to your HTML:
+
+```html
+<meta property="og:image" content="https://ogpix.vercel.app/api/og?title=Your+Title" />
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Or use in Next.js:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```typescript
+export const metadata = {
+  openGraph: {
+    images: ['https://ogpix.vercel.app/api/og?title=My+Page&theme=dark'],
+  },
+}
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 📖 API Reference
 
-## Learn More
+### Base URL
+```
+https://ogpix.vercel.app/api/og
+```
 
-To learn more about Next.js, take a look at the following resources:
+### Parameters
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `title` | string | **Required.** Main title text |
+| `subtitle` | string | Secondary text below title |
+| `theme` | string | `dark` `light` `gradient` `blue` `green` `purple` `orange` `pink` `cyan` `slate` `zinc` `sunset` `ocean` `forest` `midnight` |
+| `template` | string | `blog` `github` `product` `event` `docs` |
+| `pattern` | string | `none` `dots` `grid` `diagonal` |
+| `fontSize` | string | `auto` `sm` `md` `lg` `xl` |
+| `layout` | string | `center` `left` |
+| `tag` | string | Small label above title |
+| `author` | string | Author name at bottom |
+| `logo` | url | URL to logo/icon image |
+| `bg` | hex | Custom background color |
+| `text` | hex | Custom text color |
+| `watermark` | boolean | Show/hide watermark (default: true) |
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Examples
 
-## Deploy on Vercel
+**Blog Post:**
+```
+/api/og?title=How+to+Build+APIs&subtitle=A+complete+guide&template=blog&theme=dark
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+**GitHub Project:**
+```
+/api/og?title=my-awesome-lib&subtitle=Fast+and+lightweight&template=github&theme=gradient
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+**Product Launch:**
+```
+/api/og?title=Launching+Today&subtitle=The+future+of+X&template=product&theme=sunset
+```
+
+## 🎨 Live Builder
+
+Try the interactive builder at [ogpix.vercel.app](https://ogpix.vercel.app) to preview and customize your images.
+
+## 💰 Pricing
+
+| Free | Pro (Coming Soon) |
+|------|-------------------|
+| ✓ Unlimited images | ✓ No watermark |
+| ✓ All themes & templates | ✓ Custom fonts |
+| ✓ Full customization | ✓ Priority rendering |
+| ✓ API access | ✓ API analytics |
+| • Includes watermark | $9/mo |
+
+[Join the Pro waitlist →](https://ogpix.vercel.app)
+
+## 🛠️ Self-Hosting
+
+Clone and deploy your own instance:
+
+```bash
+git clone https://github.com/milo4jo/ogpix.git
+cd ogpix
+npm install
+npm run dev
+```
+
+Deploy to Vercel with one click:
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fmilo4jo%2Fogpix)
+
+## 🤝 Contributing
+
+Contributions welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) first.
+
+## 📄 License
+
+MIT © [Milo](https://milo-site-self.vercel.app)
+
+---
+
+<p align="center">
+  Built by <a href="https://milo-site-self.vercel.app">Milo</a> 🦊
+</p>

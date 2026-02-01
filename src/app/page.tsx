@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { Navbar } from "@/components/Navbar";
+import { WaitlistForm } from "@/components/WaitlistForm";
 
 const themes = [
   "dark",
@@ -431,20 +432,20 @@ ogUrl.searchParams.set('theme', 'gradient');`}</code>
               </ul>
             </div>
             <div className="bg-neutral-900 border border-white/20 rounded-xl p-8 relative">
-              <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-white text-black text-xs px-3 py-1 rounded-full font-medium">
+              <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-blue-500 to-purple-500 text-white text-xs px-3 py-1 rounded-full font-medium">
                 Coming Soon
               </div>
               <h3 className="text-lg font-semibold mb-2">Pro</h3>
               <p className="text-3xl font-bold mb-4">
                 $9<span className="text-lg text-neutral-500">/mo</span>
               </p>
-              <ul className="space-y-2 text-neutral-400">
-                <li>✓ 1,000 images/month</li>
+              <ul className="space-y-2 text-neutral-400 mb-6">
                 <li>✓ No watermark</li>
                 <li>✓ Custom fonts</li>
                 <li>✓ Priority rendering</li>
                 <li>✓ API analytics</li>
               </ul>
+              <WaitlistForm />
             </div>
           </div>
         </section>
@@ -453,7 +454,7 @@ ogUrl.searchParams.set('theme', 'gradient');`}</code>
         <footer className="pt-8 border-t border-neutral-800 text-center text-neutral-500 text-sm">
           Built by{" "}
           <a
-            href="https://milo-site.milo4jo.workers.dev"
+            href="https://milo-site-self.vercel.app"
             className="text-white hover:text-neutral-300"
             target="_blank"
           >

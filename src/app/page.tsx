@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import Link from "next/link";
 import { Navbar } from "@/components/Navbar";
 import { WaitlistForm } from "@/components/WaitlistForm";
 
@@ -47,6 +48,7 @@ export default function Home() {
   const [author, setAuthor] = useState("");
   const [watermark, setWatermark] = useState(true);
   const [showAdvanced, setShowAdvanced] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   const imageUrl = useMemo(() => {
     const params = new URLSearchParams();
@@ -63,28 +65,50 @@ export default function Home() {
     return `/api/og?${params.toString()}`;
   }, [title, subtitle, theme, template, pattern, fontSize, layout, tag, author, watermark]);
 
-  const fullUrl = typeof window !== "undefined" ? `${window.location.origin}${imageUrl}` : imageUrl;
+  const fullUrl =
+    typeof window !== "undefined" ? `${window.location.origin}${imageUrl}` : imageUrl;
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(fullUrl);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   return (
     <main className="min-h-screen bg-black text-white">
       <Navbar />
+
       {/* Hero */}
-      <div className="max-w-6xl mx-auto px-6 pt-24 pb-16">
-        <div className="text-center mb-16">
-          <h1 className="text-5xl sm:text-6xl font-bold tracking-tight mb-4">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-20 sm:pt-24 pb-12 sm:pb-16">
+        <div className="text-center mb-12 sm:mb-16">
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight mb-4">
             OG Images.
             <span className="text-neutral-500"> Instant API.</span>
           </h1>
-          <p className="text-xl text-neutral-400 max-w-2xl mx-auto">
-            Generate beautiful Open Graph images with a single API call. 15+ themes, templates, and
-            full customization. No design skills needed.
+          <p className="text-lg sm:text-xl text-neutral-400 max-w-2xl mx-auto mb-6">
+            Generate beautiful Open Graph images with a single API call. No signup required.
           </p>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+            <Link
+              href="/docs"
+              className="w-full sm:w-auto px-6 py-3 bg-white text-black rounded-lg font-medium hover:bg-neutral-200 transition-colors text-center"
+            >
+              Read the Docs
+            </Link>
+            <a
+              href="https://github.com/milo4jo/ogpix"
+              target="_blank"
+              className="w-full sm:w-auto px-6 py-3 bg-neutral-900 border border-neutral-800 rounded-lg font-medium hover:bg-neutral-800 transition-colors text-center"
+            >
+              View on GitHub
+            </a>
+          </div>
         </div>
 
         {/* Live Builder */}
-        <div className="grid lg:grid-cols-2 gap-8 mb-24">
+        <div className="grid lg:grid-cols-2 gap-6 lg:gap-8 mb-16 sm:mb-24">
           {/* Controls */}
-          <div className="space-y-6">
+          <div className="space-y-5 sm:space-y-6">
             {/* Template */}
             <div>
               <label className="block text-sm text-neutral-500 mb-2">Template</label>
@@ -133,7 +157,7 @@ export default function Home() {
             <div>
               <label className="block text-sm text-neutral-500 mb-2">Theme</label>
               <div className="flex flex-wrap gap-2">
-                {themes.map((t) => (
+                {themes.slice(0, 8).map((t) => (
                   <button
                     key={t}
                     onClick={() => setTheme(t)}
@@ -146,20 +170,39 @@ export default function Home() {
                     {t}
                   </button>
                 ))}
+                <button
+                  onClick={() => setShowAdvanced(!showAdvanced)}
+                  className="px-3 py-1.5 rounded-lg text-sm bg-neutral-900 text-neutral-500 hover:bg-neutral-800"
+                >
+                  +{themes.length - 8} more
+                </button>
               </div>
+              {showAdvanced && (
+                <div className="flex flex-wrap gap-2 mt-2">
+                  {themes.slice(8).map((t) => (
+                    <button
+                      key={t}
+                      onClick={() => setTheme(t)}
+                      className={`px-3 py-1.5 rounded-lg capitalize text-sm transition-colors ${
+                        theme === t
+                          ? "bg-white text-black"
+                          : "bg-neutral-900 text-neutral-400 hover:bg-neutral-800"
+                      }`}
+                    >
+                      {t}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
 
-            {/* Advanced Toggle */}
-            <button
-              onClick={() => setShowAdvanced(!showAdvanced)}
-              className="text-sm text-neutral-500 hover:text-white transition-colors"
-            >
-              {showAdvanced ? "− Hide" : "+ Show"} advanced options
-            </button>
-
-            {/* Advanced Options */}
-            {showAdvanced && (
-              <div className="space-y-4 p-4 bg-neutral-900/50 rounded-lg border border-neutral-800">
+            {/* Advanced Options Toggle */}
+            <details className="group">
+              <summary className="text-sm text-neutral-500 hover:text-white transition-colors cursor-pointer list-none flex items-center gap-2">
+                <span className="group-open:rotate-90 transition-transform">→</span>
+                Advanced options
+              </summary>
+              <div className="mt-4 space-y-4 p-4 bg-neutral-900/50 rounded-lg border border-neutral-800">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-xs text-neutral-500 mb-1">Tag/Label</label>
@@ -185,13 +228,15 @@ export default function Home() {
 
                 <div>
                   <label className="block text-xs text-neutral-500 mb-1">Pattern</label>
-                  <div className="flex gap-2">
+                  <div className="flex flex-wrap gap-2">
                     {patterns.map((p) => (
                       <button
                         key={p}
                         onClick={() => setPattern(p)}
                         className={`px-2 py-1 rounded text-xs capitalize ${
-                          pattern === p ? "bg-white text-black" : "bg-neutral-800 text-neutral-400"
+                          pattern === p
+                            ? "bg-white text-black"
+                            : "bg-neutral-800 text-neutral-400"
                         }`}
                       >
                         {p}
@@ -203,7 +248,7 @@ export default function Home() {
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-xs text-neutral-500 mb-1">Font Size</label>
-                    <div className="flex gap-1">
+                    <div className="flex flex-wrap gap-1">
                       {fontSizes.map((s) => (
                         <button
                           key={s}
@@ -227,7 +272,9 @@ export default function Home() {
                           key={l}
                           onClick={() => setLayout(l)}
                           className={`px-2 py-1 rounded text-xs capitalize ${
-                            layout === l ? "bg-white text-black" : "bg-neutral-800 text-neutral-400"
+                            layout === l
+                              ? "bg-white text-black"
+                              : "bg-neutral-800 text-neutral-400"
                           }`}
                         >
                           {l}
@@ -244,194 +291,85 @@ export default function Home() {
                     onChange={(e) => setWatermark(e.target.checked)}
                     className="rounded"
                   />
-                  Show watermark
+                  Show watermark (Pro removes this)
                 </label>
               </div>
-            )}
+            </details>
 
             {/* API URL */}
             <div>
-              <label className="block text-sm text-neutral-500 mb-2">API URL</label>
-              <div className="bg-neutral-900 border border-neutral-800 rounded-lg p-3 overflow-x-auto">
-                <code className="text-xs text-green-400 break-all">{fullUrl}</code>
+              <label className="block text-sm text-neutral-500 mb-2">Your API URL</label>
+              <div className="bg-neutral-900 border border-neutral-800 rounded-lg p-3 flex items-start gap-2">
+                <code className="text-xs sm:text-sm text-green-400 break-all flex-1">
+                  {fullUrl}
+                </code>
+                <button
+                  onClick={handleCopy}
+                  className="shrink-0 px-2 py-1 text-xs bg-neutral-800 hover:bg-neutral-700 rounded transition-colors"
+                >
+                  {copied ? "Copied!" : "Copy"}
+                </button>
               </div>
-              <button
-                onClick={() => navigator.clipboard.writeText(fullUrl)}
-                className="mt-2 text-xs text-neutral-500 hover:text-white"
-              >
-                Copy URL
-              </button>
             </div>
           </div>
 
           {/* Preview */}
-          <div>
+          <div className="lg:sticky lg:top-20 lg:h-fit">
             <label className="block text-sm text-neutral-500 mb-2">Preview</label>
-            <div className="border border-neutral-800 rounded-lg overflow-hidden sticky top-6">
+            <div className="border border-neutral-800 rounded-lg overflow-hidden">
               <img src={imageUrl} alt="OG Preview" className="w-full" />
             </div>
+            <p className="text-xs text-neutral-600 mt-2 text-center">
+              1200×630px · PNG · Optimized for social sharing
+            </p>
           </div>
         </div>
 
-        {/* Get Started */}
-        <section className="mb-24" id="docs">
-          <h2 className="text-3xl font-bold mb-8">Get Started</h2>
-
-          <div className="grid md:grid-cols-2 gap-8">
-            {/* Quick Start */}
-            <div className="bg-neutral-900 border border-neutral-800 rounded-xl p-6">
-              <h3 className="text-lg font-semibold mb-4">Quick Start</h3>
-              <p className="text-neutral-400 text-sm mb-4">
-                Just add the URL to your HTML meta tags:
-              </p>
-              <pre className="bg-black rounded-lg p-4 overflow-x-auto text-sm">
-                <code className="text-green-400">{`<meta property="og:image" content="https://ogpix.vercel.app/api/og?title=Your%20Title" />`}</code>
-              </pre>
-            </div>
-
-            {/* Next.js */}
-            <div className="bg-neutral-900 border border-neutral-800 rounded-xl p-6">
-              <h3 className="text-lg font-semibold mb-4">Next.js</h3>
-              <p className="text-neutral-400 text-sm mb-4">Use in your metadata export:</p>
-              <pre className="bg-black rounded-lg p-4 overflow-x-auto text-sm">
-                <code className="text-green-400">{`export const metadata = {
-  openGraph: {
-    images: ['https://ogpix.vercel.app/api/og?title=My+Page'],
-  },
-}`}</code>
-              </pre>
-            </div>
-
-            {/* Fetch/curl */}
-            <div className="bg-neutral-900 border border-neutral-800 rounded-xl p-6">
-              <h3 className="text-lg font-semibold mb-4">curl / fetch</h3>
-              <p className="text-neutral-400 text-sm mb-4">Download the image directly:</p>
-              <pre className="bg-black rounded-lg p-4 overflow-x-auto text-sm">
-                <code className="text-green-400">{`curl "https://ogpix.vercel.app/api/og?title=Hello" -o og.png`}</code>
-              </pre>
-            </div>
-
-            {/* Dynamic */}
-            <div className="bg-neutral-900 border border-neutral-800 rounded-xl p-6">
-              <h3 className="text-lg font-semibold mb-4">Dynamic Images</h3>
-              <p className="text-neutral-400 text-sm mb-4">
-                Generate images on-the-fly for each page:
-              </p>
-              <pre className="bg-black rounded-lg p-4 overflow-x-auto text-sm">
-                <code className="text-green-400">{`const ogUrl = new URL('https://ogpix.vercel.app/api/og');
-ogUrl.searchParams.set('title', post.title);
-ogUrl.searchParams.set('subtitle', post.excerpt);
-ogUrl.searchParams.set('theme', 'gradient');`}</code>
-              </pre>
-            </div>
-          </div>
-        </section>
-
-        {/* API Reference */}
-        <section className="mb-24">
-          <h2 className="text-3xl font-bold mb-8">API Reference</h2>
-
-          <div className="bg-neutral-900 border border-neutral-800 rounded-xl overflow-x-auto">
-            <table className="w-full text-sm min-w-[500px]">
-              <thead className="bg-neutral-800">
-                <tr>
-                  <th className="px-6 py-3 text-left text-neutral-400 font-medium">Parameter</th>
-                  <th className="px-6 py-3 text-left text-neutral-400 font-medium">Type</th>
-                  <th className="px-6 py-3 text-left text-neutral-400 font-medium">Description</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-neutral-800">
-                <tr>
-                  <td className="px-6 py-3 font-mono text-green-400">title</td>
-                  <td className="px-6 py-3 text-neutral-400">string</td>
-                  <td className="px-6 py-3">Main title text (required)</td>
-                </tr>
-                <tr>
-                  <td className="px-6 py-3 font-mono text-green-400">subtitle</td>
-                  <td className="px-6 py-3 text-neutral-400">string</td>
-                  <td className="px-6 py-3">Secondary text below title</td>
-                </tr>
-                <tr>
-                  <td className="px-6 py-3 font-mono text-green-400">theme</td>
-                  <td className="px-6 py-3 text-neutral-400">string</td>
-                  <td className="px-6 py-3">
-                    dark, light, gradient, blue, green, purple, orange, pink, cyan, slate, zinc,
-                    sunset, ocean, forest, midnight
-                  </td>
-                </tr>
-                <tr>
-                  <td className="px-6 py-3 font-mono text-green-400">template</td>
-                  <td className="px-6 py-3 text-neutral-400">string</td>
-                  <td className="px-6 py-3">blog, github, product, event, docs</td>
-                </tr>
-                <tr>
-                  <td className="px-6 py-3 font-mono text-green-400">pattern</td>
-                  <td className="px-6 py-3 text-neutral-400">string</td>
-                  <td className="px-6 py-3">none, dots, grid, diagonal</td>
-                </tr>
-                <tr>
-                  <td className="px-6 py-3 font-mono text-green-400">fontSize</td>
-                  <td className="px-6 py-3 text-neutral-400">string</td>
-                  <td className="px-6 py-3">auto, sm, md, lg, xl</td>
-                </tr>
-                <tr>
-                  <td className="px-6 py-3 font-mono text-green-400">layout</td>
-                  <td className="px-6 py-3 text-neutral-400">string</td>
-                  <td className="px-6 py-3">center, left</td>
-                </tr>
-                <tr>
-                  <td className="px-6 py-3 font-mono text-green-400">tag</td>
-                  <td className="px-6 py-3 text-neutral-400">string</td>
-                  <td className="px-6 py-3">Small label above title</td>
-                </tr>
-                <tr>
-                  <td className="px-6 py-3 font-mono text-green-400">author</td>
-                  <td className="px-6 py-3 text-neutral-400">string</td>
-                  <td className="px-6 py-3">Author name below content</td>
-                </tr>
-                <tr>
-                  <td className="px-6 py-3 font-mono text-green-400">logo</td>
-                  <td className="px-6 py-3 text-neutral-400">url</td>
-                  <td className="px-6 py-3">URL to logo/icon image</td>
-                </tr>
-                <tr>
-                  <td className="px-6 py-3 font-mono text-green-400">bg</td>
-                  <td className="px-6 py-3 text-neutral-400">color</td>
-                  <td className="px-6 py-3">Custom background color (hex)</td>
-                </tr>
-                <tr>
-                  <td className="px-6 py-3 font-mono text-green-400">text</td>
-                  <td className="px-6 py-3 text-neutral-400">color</td>
-                  <td className="px-6 py-3">Custom text color (hex)</td>
-                </tr>
-                <tr>
-                  <td className="px-6 py-3 font-mono text-green-400">watermark</td>
-                  <td className="px-6 py-3 text-neutral-400">boolean</td>
-                  <td className="px-6 py-3">Show/hide watermark (default: true)</td>
-                </tr>
-              </tbody>
-            </table>
+        {/* Quick Links */}
+        <section className="mb-16 sm:mb-24">
+          <div className="grid sm:grid-cols-3 gap-4">
+            <Link
+              href="/docs#quickstart"
+              className="p-6 bg-neutral-900 border border-neutral-800 rounded-xl hover:border-neutral-700 transition-colors"
+            >
+              <h3 className="font-semibold mb-2">Quick Start →</h3>
+              <p className="text-sm text-neutral-400">Get running in 30 seconds</p>
+            </Link>
+            <Link
+              href="/docs#api-keys"
+              className="p-6 bg-neutral-900 border border-neutral-800 rounded-xl hover:border-neutral-700 transition-colors"
+            >
+              <h3 className="font-semibold mb-2">API Keys →</h3>
+              <p className="text-sm text-neutral-400">Free vs Pro explained</p>
+            </Link>
+            <Link
+              href="/docs#api-reference"
+              className="p-6 bg-neutral-900 border border-neutral-800 rounded-xl hover:border-neutral-700 transition-colors"
+            >
+              <h3 className="font-semibold mb-2">API Reference →</h3>
+              <p className="text-sm text-neutral-400">All parameters documented</p>
+            </Link>
           </div>
         </section>
 
         {/* Pricing */}
-        <section className="mb-24">
-          <h2 className="text-3xl font-bold mb-8 text-center">Pricing</h2>
-          <div className="grid md:grid-cols-2 gap-8 max-w-2xl mx-auto">
-            <div className="bg-neutral-900 border border-neutral-800 rounded-xl p-8">
+        <section className="mb-16 sm:mb-24" id="pricing">
+          <h2 className="text-2xl sm:text-3xl font-bold mb-8 text-center">Pricing</h2>
+          <div className="grid sm:grid-cols-2 gap-6 max-w-2xl mx-auto">
+            <div className="bg-neutral-900 border border-neutral-800 rounded-xl p-6 sm:p-8">
               <h3 className="text-lg font-semibold mb-2">Free</h3>
               <p className="text-3xl font-bold mb-4">
                 $0<span className="text-lg text-neutral-500">/mo</span>
               </p>
-              <ul className="space-y-2 text-neutral-400">
+              <ul className="space-y-2 text-neutral-400 text-sm sm:text-base">
                 <li>✓ Unlimited images</li>
                 <li>✓ All themes & templates</li>
                 <li>✓ Full customization</li>
-                <li>✓ API access</li>
+                <li>✓ No API key required</li>
                 <li className="text-neutral-600">• Watermark included</li>
               </ul>
             </div>
-            <div className="bg-neutral-900 border border-white/20 rounded-xl p-8 relative">
+            <div className="bg-neutral-900 border border-white/20 rounded-xl p-6 sm:p-8 relative">
               <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-blue-500 to-purple-500 text-white text-xs px-3 py-1 rounded-full font-medium">
                 Coming Soon
               </div>
@@ -439,7 +377,7 @@ ogUrl.searchParams.set('theme', 'gradient');`}</code>
               <p className="text-3xl font-bold mb-4">
                 $9<span className="text-lg text-neutral-500">/mo</span>
               </p>
-              <ul className="space-y-2 text-neutral-400 mb-6">
+              <ul className="space-y-2 text-neutral-400 text-sm sm:text-base mb-6">
                 <li>✓ No watermark</li>
                 <li>✓ Custom fonts</li>
                 <li>✓ Priority rendering</li>
@@ -452,18 +390,30 @@ ogUrl.searchParams.set('theme', 'gradient');`}</code>
 
         {/* Footer */}
         <footer className="pt-8 border-t border-neutral-800 text-center text-neutral-500 text-sm">
-          Built by{" "}
-          <a
-            href="https://milo-site-self.vercel.app"
-            className="text-white hover:text-neutral-300"
-            target="_blank"
-          >
-            Milo
-          </a>{" "}
-          🦊 •{" "}
-          <a href="https://github.com/milo4jo/ogpix" className="hover:text-white" target="_blank">
-            GitHub
-          </a>
+          <p>
+            Built by{" "}
+            <a
+              href="https://milo-site-self.vercel.app"
+              className="text-white hover:text-neutral-300"
+              target="_blank"
+            >
+              Milo
+            </a>{" "}
+            🦊
+          </p>
+          <p className="mt-2">
+            <Link href="/docs" className="hover:text-white">
+              Docs
+            </Link>
+            {" · "}
+            <a
+              href="https://github.com/milo4jo/ogpix"
+              className="hover:text-white"
+              target="_blank"
+            >
+              GitHub
+            </a>
+          </p>
         </footer>
       </div>
     </main>

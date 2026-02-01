@@ -14,7 +14,7 @@ export function Navbar() {
         </Link>
 
         <div className="flex items-center gap-6">
-          <Link href="/#docs" className="text-sm text-neutral-400 hover:text-white">
+          <Link href="/docs" className="text-sm text-neutral-400 hover:text-white">
             Docs
           </Link>
           <a

@@ -1,0 +1,33 @@
+# Gitleaks configuration for OGPix
+# Extends default rules with custom patterns
+
+title = "OGPix Secret Detection"
+
+[extend]
+# Use default gitleaks rules
+useDefault = true
+
+[[rules]]
+id = "ogpix-api-key"
+description = "OGPix API Key"
+regex = '''ogpix_[a-f0-9]{40,}'''
+tags = ["api-key", "ogpix"]
+
+[[rules]]
+id = "milo-api-key"
+description = "Milo API Key"
+regex = '''milo_[a-f0-9]{40,}'''
+tags = ["api-key", "milo"]
+
+[[rules]]
+id = "supabase-service-key"
+description = "Supabase Service Role Key"
+regex = '''sb_secret_[A-Za-z0-9_-]+'''
+tags = ["api-key", "supabase"]
+
+[allowlist]
+description = "Global allowlist"
+paths = [
+  '''.env.example''',
+  '''\.md$''',
+]

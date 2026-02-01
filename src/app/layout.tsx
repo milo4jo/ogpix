@@ -10,9 +10,11 @@ const inter = Inter({
 
 const siteUrl = "https://ogpix.vercel.app";
 // Brutal minimalism - matches landing page style
-// Using Pro API key for dogfooding (no watermark)
-const ogpixApiKey = "ogpix_2e699500ec5dd932369dc282ed72bc05681ff547488a05ce";
-const ogImageUrl = `${siteUrl}/api/og?title=OG+Images.&subtitle=One+URL.&theme=dark&fontSize=xl&key=${ogpixApiKey}&watermark=false`;
+// API key from env (set in Vercel dashboard)
+const ogpixApiKey = process.env.OGPIX_API_KEY || "";
+const ogImageUrl = ogpixApiKey 
+  ? `${siteUrl}/api/og?title=OG+Images.&subtitle=One+URL.&theme=dark&fontSize=xl&key=${ogpixApiKey}&watermark=false`
+  : `${siteUrl}/api/og?title=OG+Images.&subtitle=One+URL.&theme=dark&fontSize=xl`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),

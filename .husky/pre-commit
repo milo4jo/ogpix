@@ -1,0 +1,26 @@
+#!/bin/sh
+
+# Secret Detection - NEVER commit API keys, tokens, or secrets
+echo "🔍 Scanning for secrets..."
+
+# Run gitleaks on staged files
+gitleaks git --staged --verbose --redact
+
+if [ $? -ne 0 ]; then
+  echo ""
+  echo "❌ COMMIT BLOCKED: Secrets detected!"
+  echo ""
+  echo "⚠️  NEVER commit API keys, tokens, or passwords."
+  echo "   Use environment variables instead."
+  echo ""
+  echo "If this is a false positive, you can:"
+  echo "  1. Add to .gitleaksignore"
+  echo "  2. Use: git commit --no-verify (NOT recommended)"
+  echo ""
+  exit 1
+fi
+
+echo "✅ No secrets found"
+
+# Run linting
+npm run lint

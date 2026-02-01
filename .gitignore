@@ -43,3 +43,11 @@ next-env.d.ts
 
 # ContextKit
 .contextkit/index.db
+
+# Playwright
+node_modules/
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/

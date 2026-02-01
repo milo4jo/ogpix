@@ -1,11 +1,34 @@
 import Link from "next/link";
 import { Navbar } from "@/components/Navbar";
 import { OGBuilder } from "@/components/OGBuilder";
+import type { Metadata } from "next";
 
-export const metadata = {
+const siteUrl = "https://ogpix.vercel.app";
+
+export const metadata: Metadata = {
   title: "Editor — OGPix",
   description:
     "Full-featured OG image editor with all themes, templates, and customization options.",
+  openGraph: {
+    title: "OG Image Editor — OGPix",
+    description: "21 themes, 10 templates, full customization. Try it free.",
+    images: [
+      {
+        url: `${siteUrl}/api/og?title=OG+Image+Editor&subtitle=21+themes,+10+templates&theme=aurora&template=product`,
+        width: 1200,
+        height: 630,
+        alt: "OGPix Editor",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "OG Image Editor — OGPix",
+    description: "21 themes, 10 templates, full customization. Try it free.",
+    images: [
+      `${siteUrl}/api/og?title=OG+Image+Editor&subtitle=21+themes,+10+templates&theme=aurora&template=product`,
+    ],
+  },
 };
 
 export default function EditorPage() {

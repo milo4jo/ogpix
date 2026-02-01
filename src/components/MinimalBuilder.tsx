@@ -35,9 +35,15 @@ export function MinimalBuilder() {
     return `/api/og?${params.toString()}`;
   }, [debouncedTitle, debouncedSubtitle, theme]);
 
-  const fullUrl = origin
-    ? `${origin}/api/og?title=${encodeURIComponent(title)}${subtitle ? `&subtitle=${encodeURIComponent(subtitle)}` : ""}&theme=${theme}`
-    : "";
+  // Build the full URL for copying (uses current values, not debounced)
+  const fullUrl = useMemo(() => {
+    if (!origin) return "";
+    const params = new URLSearchParams();
+    params.set("title", title);
+    if (subtitle) params.set("subtitle", subtitle);
+    params.set("theme", theme);
+    return `${origin}/api/og?${params.toString()}`;
+  }, [origin, title, subtitle, theme]);
 
   const handleCopy = () => {
     navigator.clipboard.writeText(fullUrl);

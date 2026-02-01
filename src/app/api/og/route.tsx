@@ -264,12 +264,12 @@ export async function GET(request: NextRequest) {
       return NextResponse.json(
         {
           error: "Rate limit exceeded",
-          message: "Too many requests. Add an API key for higher limits.",
+          message: "Daily limit of 20 images reached. Sign up for a free API key to get 500/month.",
         },
         {
           status: 429,
           headers: {
-            "Retry-After": "3600",
+            "Retry-After": "86400",
             "Cache-Control": "no-store",
           },
         }

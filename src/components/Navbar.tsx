@@ -14,6 +14,9 @@ export function Navbar() {
         </Link>
 
         <div className="flex items-center gap-6">
+          <Link href="/editor" className="text-sm text-neutral-400 hover:text-white">
+            Editor
+          </Link>
           <Link href="/docs" className="text-sm text-neutral-400 hover:text-white">
             Docs
           </Link>
@@ -21,7 +24,7 @@ export function Navbar() {
             href="https://github.com/milo4jo/ogpix"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-sm text-neutral-400 hover:text-white"
+            className="text-sm text-neutral-400 hover:text-white hidden sm:block"
           >
             GitHub
           </a>

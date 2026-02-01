@@ -330,8 +330,8 @@ ogUrl.searchParams.set('theme', 'gradient');`}</code>
         <section className="mb-24">
           <h2 className="text-3xl font-bold mb-8">API Reference</h2>
 
-          <div className="bg-neutral-900 border border-neutral-800 rounded-xl overflow-hidden">
-            <table className="w-full text-sm">
+          <div className="bg-neutral-900 border border-neutral-800 rounded-xl overflow-x-auto">
+            <table className="w-full text-sm min-w-[500px]">
               <thead className="bg-neutral-800">
                 <tr>
                   <th className="px-6 py-3 text-left text-neutral-400 font-medium">Parameter</th>

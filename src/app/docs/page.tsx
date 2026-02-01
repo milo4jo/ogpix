@@ -428,6 +428,7 @@ export async function generateMetadata({ params }): Promise<Metadata> {
                   href="https://milo-site-self.vercel.app"
                   className="text-white hover:text-neutral-300"
                   target="_blank"
+                  rel="noopener noreferrer"
                 >
                   Milo
                 </a>{" "}
@@ -442,6 +443,7 @@ export async function generateMetadata({ params }): Promise<Metadata> {
                   href="https://github.com/milo4jo/ogpix"
                   className="hover:text-white"
                   target="_blank"
+                  rel="noopener noreferrer"
                 >
                   GitHub
                 </a>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
+import { OGPreview } from "./OGPreview";
 
 const themes = [
   "dark",
@@ -46,7 +47,6 @@ export function OGBuilder() {
   const [watermark, setWatermark] = useState(true);
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [imageLoading, setImageLoading] = useState(true);
   const [origin, setOrigin] = useState("");
 
   // Get origin on client side
@@ -70,11 +70,6 @@ export function OGBuilder() {
   }, [title, subtitle, theme, template, pattern, fontSize, layout, tag, author, watermark]);
 
   const fullUrl = origin ? `${origin}${imageUrl}` : imageUrl;
-
-  // Reset loading state when URL changes
-  useEffect(() => {
-    setImageLoading(true);
-  }, [imageUrl]);
 
   const handleCopy = () => {
     navigator.clipboard.writeText(fullUrl);
@@ -285,19 +280,8 @@ export function OGBuilder() {
       {/* Preview */}
       <div className="lg:sticky lg:top-20 lg:h-fit">
         <label className="block text-sm text-neutral-500 mb-2">Preview</label>
-        <div className="border border-neutral-800 rounded-lg overflow-hidden relative aspect-[1200/630] bg-neutral-900">
-          {imageLoading && (
-            <div className="absolute inset-0 flex items-center justify-center bg-neutral-900">
-              <div className="w-8 h-8 border-2 border-neutral-600 border-t-white rounded-full animate-spin" />
-            </div>
-          )}
-          <img
-            src={imageUrl}
-            alt="OG Preview"
-            className={`w-full h-full object-cover transition-opacity ${imageLoading ? "opacity-0" : "opacity-100"}`}
-            onLoad={() => setImageLoading(false)}
-            onError={() => setImageLoading(false)}
-          />
+        <div className="border border-neutral-800 rounded-lg overflow-hidden">
+          <OGPreview imageUrl={imageUrl} />
         </div>
         <p className="text-xs text-neutral-600 mt-2 text-center">
           1200×630px · PNG · Optimized for social sharing

@@ -319,7 +319,9 @@ export async function GET(request: NextRequest) {
 
   // Border customization (Pro feature preview)
   const borderWidth = parseInt(searchParams.get("borderWidth") || "0", 10);
-  const borderColor = searchParams.get("borderColor") || "#ffffff";
+  const borderColorParam = searchParams.get("borderColor") || "ffffff";
+  // Ensure borderColor has # prefix for CSS
+  const borderColor = borderColorParam.startsWith("#") ? borderColorParam : `#${borderColorParam}`;
   const borderRadius = parseInt(searchParams.get("borderRadius") || "0", 10);
 
   // Validate logo URL

@@ -1,7 +1,70 @@
 import { ImageResponse } from "@vercel/og";
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { createClient } from "@supabase/supabase-js";
 
 export const runtime = "edge";
+
+// Supabase client for edge (using service key)
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_KEY;
+
+async function trackUsage(apiKey: string, theme: string): Promise<{ allowed: boolean; usage: number; limit: number }> {
+  if (!supabaseUrl || !supabaseServiceKey) {
+    // No Supabase configured - allow all (development mode)
+    return { allowed: true, usage: 0, limit: 100 };
+  }
+
+  const supabase = createClient(supabaseUrl, supabaseServiceKey);
+
+  // Find the API key
+  const { data: keyData } = await supabase
+    .from("api_keys")
+    .select("id, user_id, is_active")
+    .eq("key", apiKey)
+    .single();
+
+  if (!keyData || !keyData.is_active) {
+    return { allowed: false, usage: 0, limit: 0 };
+  }
+
+  // Get user's plan
+  const { data: plan } = await supabase
+    .from("user_plans")
+    .select("monthly_limit")
+    .eq("user_id", keyData.user_id)
+    .single();
+
+  const monthlyLimit = plan?.monthly_limit || 100;
+
+  // Count this month's usage
+  const startOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString();
+  const { count } = await supabase
+    .from("usage_logs")
+    .select("*", { count: "exact", head: true })
+    .eq("api_key_id", keyData.id)
+    .gte("created_at", startOfMonth);
+
+  const currentUsage = count || 0;
+
+  if (currentUsage >= monthlyLimit) {
+    return { allowed: false, usage: currentUsage, limit: monthlyLimit };
+  }
+
+  // Log the usage
+  await supabase.from("usage_logs").insert({
+    api_key_id: keyData.id,
+    theme: theme,
+    endpoint: "/api/og",
+  });
+
+  // Update last_used_at
+  await supabase
+    .from("api_keys")
+    .update({ last_used_at: new Date().toISOString() })
+    .eq("id", keyData.id);
+
+  return { allowed: true, usage: currentUsage + 1, limit: monthlyLimit };
+}
 
 // Pattern SVGs
 const patterns = {
@@ -13,6 +76,29 @@ const patterns = {
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
+
+  // API Key for usage tracking
+  const apiKey = searchParams.get("key");
+  
+  // Check API key and rate limiting if provided
+  if (apiKey) {
+    const theme = searchParams.get("theme") || "dark";
+    const { allowed, usage, limit } = await trackUsage(apiKey, theme);
+    
+    if (!allowed) {
+      return NextResponse.json(
+        { 
+          error: "Rate limit exceeded or invalid API key",
+          usage,
+          limit,
+          message: usage >= limit 
+            ? `Monthly limit of ${limit} images reached. Upgrade to Pro for more.`
+            : "Invalid or inactive API key"
+        },
+        { status: 429 }
+      );
+    }
+  }
 
   // Basic parameters
   const title = searchParams.get("title") || "Hello World";

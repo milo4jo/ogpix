@@ -39,7 +39,7 @@ export async function GET() {
       await supabase.from("user_plans").insert({
         user_id: user.id,
         plan: "free",
-        monthly_limit: 100,
+        monthly_limit: 500,
       });
     }
 
@@ -83,7 +83,7 @@ export async function GET() {
         name: user.name,
         email: user.email,
       },
-      plan: plan || { plan: "free", monthly_limit: 100 },
+      plan: plan || { plan: "free", monthly_limit: 500 },
       apiKeys: keysWithUsage,
       totalUsage,
     });

@@ -88,7 +88,7 @@ Try the interactive builder at [ogpix.vercel.app](https://ogpix.vercel.app) to p
 
 | Free | Pro (Coming Soon) |
 |------|-------------------|
-| ✓ 100 images/month | ✓ Unlimited images |
+| ✓ 500 images/month | ✓ Unlimited images |
 | ✓ All themes & templates | ✓ No watermark |
 | ✓ Full customization | ✓ Custom fonts |
 | ✓ API access | ✓ Priority rendering |
@@ -96,8 +96,8 @@ Try the interactive builder at [ogpix.vercel.app](https://ogpix.vercel.app) to p
 | • Rate limited | $9/mo |
 
 **Rate Limits:**
-- Without API key: 100 requests/hour per IP
-- With free API key: 100 images/month
+- Without API key: 20 requests/day per IP
+- With free API key: 500 images/month
 - Pro: Unlimited
 
 [Join the Pro waitlist →](https://ogpix.vercel.app)

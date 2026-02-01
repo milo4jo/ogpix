@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS user_plans (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID REFERENCES users(id) ON DELETE CASCADE,
   plan TEXT DEFAULT 'free' CHECK (plan IN ('free', 'pro', 'team')),
-  monthly_limit INTEGER DEFAULT 100,
+  monthly_limit INTEGER DEFAULT 500,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW(),
   UNIQUE(user_id)
@@ -85,12 +85,12 @@ BEGIN
   END IF;
   
   -- Get user's limit
-  SELECT COALESCE(up.monthly_limit, 100) INTO v_limit
+  SELECT COALESCE(up.monthly_limit, 500) INTO v_limit
   FROM user_plans up
   WHERE up.user_id = v_user_id;
   
   IF v_limit IS NULL THEN
-    v_limit := 100; -- Default free limit
+    v_limit := 500; -- Default free limit
   END IF;
   
   -- Get current usage

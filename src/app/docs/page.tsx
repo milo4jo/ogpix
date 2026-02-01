@@ -287,15 +287,15 @@ export default function DocsPage() {
                   ✓ Free Tier — Get Started Instantly
                 </h3>
                 <p className="text-neutral-400">
-                  Use without an API key (100 req/hour per IP) or sign up for a free API key (100
-                  images/month). Images include a small &quot;ogpix.vercel.app&quot; watermark.
+                  Try without signup (20 images/day per IP) or get a free API key for 500
+                  images/month. Images include a small &quot;ogpix.vercel.app&quot; watermark.
                 </p>
               </div>
 
               <h2 className="text-xl font-semibold mb-4">Free Tier</h2>
               <ul className="list-disc list-inside text-neutral-400 space-y-2 mb-8">
-                <li>100 images per month (with API key)</li>
-                <li>100 requests per hour without API key (IP-based)</li>
+                <li>500 images per month (with free API key)</li>
+                <li>20 requests per day without API key (IP-based)</li>
                 <li>All themes and templates</li>
                 <li>Full customization options</li>
                 <li>Small watermark included</li>

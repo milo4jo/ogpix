@@ -10,8 +10,8 @@ const supabaseServiceKey = process.env.SUPABASE_SERVICE_KEY;
 
 // In-memory rate limit store for edge (resets on cold start, but good enough for basic protection)
 const ipRequestCounts = new Map<string, { count: number; resetAt: number }>();
-const IP_RATE_LIMIT = 100; // requests per window
-const IP_RATE_WINDOW_MS = 60 * 60 * 1000; // 1 hour
+const IP_RATE_LIMIT = 20; // requests per day (encourages signup for more)
+const IP_RATE_WINDOW_MS = 24 * 60 * 60 * 1000; // 24 hours
 const MAX_IP_ENTRIES = 10000; // Prevent memory bloat
 
 function checkIpRateLimit(ip: string): boolean {
@@ -112,7 +112,7 @@ async function trackUsage(
   theme: string
 ): Promise<{ allowed: boolean; usage: number; limit: number }> {
   if (!supabaseUrl || !supabaseServiceKey) {
-    return { allowed: true, usage: 0, limit: 100 };
+    return { allowed: true, usage: 0, limit: 500 };
   }
 
   const supabase = createClient(supabaseUrl, supabaseServiceKey);
@@ -140,7 +140,7 @@ async function trackUsage(
       .gte("created_at", startOfMonth),
   ]);
 
-  const monthlyLimit = planResult.data?.monthly_limit || 100;
+  const monthlyLimit = planResult.data?.monthly_limit || 500;
   const currentUsage = usageResult.count || 0;
 
   if (currentUsage >= monthlyLimit) {

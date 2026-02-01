@@ -129,7 +129,7 @@ export default function Home() {
               <div className="text-2xl mb-3">💰</div>
               <h3 className="font-semibold mb-2">Free to Start</h3>
               <p className="text-sm text-neutral-400">
-                100 images per month free. No credit card required.
+                500 images per month free. No credit card required.
               </p>
             </div>
           </div>
@@ -145,7 +145,7 @@ export default function Home() {
                 $0<span className="text-lg text-neutral-500">/mo</span>
               </p>
               <ul className="space-y-2 text-neutral-400 text-sm sm:text-base">
-                <li>✓ 100 images/month</li>
+                <li>✓ 500 images/month</li>
                 <li>✓ All themes & templates</li>
                 <li>✓ Full customization</li>
                 <li>✓ Free API key</li>

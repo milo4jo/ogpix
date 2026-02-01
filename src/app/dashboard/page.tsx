@@ -144,13 +144,13 @@ export default function DashboardPage() {
             <div className="text-sm text-neutral-500 mb-1">Images Generated</div>
             <div className="text-3xl font-bold">{data?.totalUsage || 0}</div>
             <div className="text-xs text-neutral-600 mt-1">
-              of {data?.plan.monthly_limit || 100} free/month
+              of {data?.plan.monthly_limit || 500} free/month
             </div>
             <div className="mt-2 h-1.5 bg-neutral-800 rounded-full overflow-hidden">
               <div
                 className="h-full bg-blue-500 rounded-full transition-all"
                 style={{
-                  width: `${Math.min(100, ((data?.totalUsage || 0) / (data?.plan.monthly_limit || 100)) * 100)}%`,
+                  width: `${Math.min(100, ((data?.totalUsage || 0) / (data?.plan.monthly_limit || 500)) * 100)}%`,
                 }}
               />
             </div>

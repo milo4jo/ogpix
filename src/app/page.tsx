@@ -4,8 +4,21 @@ import { useState, useMemo } from "react";
 import { Navbar } from "@/components/Navbar";
 
 const themes = [
-  "dark", "light", "gradient", "blue", "green", "purple", 
-  "orange", "pink", "cyan", "slate", "zinc", "sunset", "ocean", "forest", "midnight"
+  "dark",
+  "light",
+  "gradient",
+  "blue",
+  "green",
+  "purple",
+  "orange",
+  "pink",
+  "cyan",
+  "slate",
+  "zinc",
+  "sunset",
+  "ocean",
+  "forest",
+  "midnight",
 ];
 
 const templates = [
@@ -62,8 +75,8 @@ export default function Home() {
             <span className="text-neutral-500"> Instant API.</span>
           </h1>
           <p className="text-xl text-neutral-400 max-w-2xl mx-auto">
-            Generate beautiful Open Graph images with a single API call. 
-            15+ themes, templates, and full customization. No design skills needed.
+            Generate beautiful Open Graph images with a single API call. 15+ themes, templates, and
+            full customization. No design skills needed.
           </p>
         </div>
 
@@ -168,7 +181,7 @@ export default function Home() {
                     />
                   </div>
                 </div>
-                
+
                 <div>
                   <label className="block text-xs text-neutral-500 mb-1">Pattern</label>
                   <div className="flex gap-2">
@@ -195,7 +208,9 @@ export default function Home() {
                           key={s}
                           onClick={() => setFontSize(s)}
                           className={`px-2 py-1 rounded text-xs ${
-                            fontSize === s ? "bg-white text-black" : "bg-neutral-800 text-neutral-400"
+                            fontSize === s
+                              ? "bg-white text-black"
+                              : "bg-neutral-800 text-neutral-400"
                           }`}
                         >
                           {s}
@@ -252,7 +267,6 @@ export default function Home() {
           <div>
             <label className="block text-sm text-neutral-500 mb-2">Preview</label>
             <div className="border border-neutral-800 rounded-lg overflow-hidden sticky top-6">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={imageUrl} alt="OG Preview" className="w-full" />
             </div>
           </div>
@@ -261,7 +275,7 @@ export default function Home() {
         {/* Get Started */}
         <section className="mb-24" id="docs">
           <h2 className="text-3xl font-bold mb-8">Get Started</h2>
-          
+
           <div className="grid md:grid-cols-2 gap-8">
             {/* Quick Start */}
             <div className="bg-neutral-900 border border-neutral-800 rounded-xl p-6">
@@ -277,9 +291,7 @@ export default function Home() {
             {/* Next.js */}
             <div className="bg-neutral-900 border border-neutral-800 rounded-xl p-6">
               <h3 className="text-lg font-semibold mb-4">Next.js</h3>
-              <p className="text-neutral-400 text-sm mb-4">
-                Use in your metadata export:
-              </p>
+              <p className="text-neutral-400 text-sm mb-4">Use in your metadata export:</p>
               <pre className="bg-black rounded-lg p-4 overflow-x-auto text-sm">
                 <code className="text-green-400">{`export const metadata = {
   openGraph: {
@@ -292,9 +304,7 @@ export default function Home() {
             {/* Fetch/curl */}
             <div className="bg-neutral-900 border border-neutral-800 rounded-xl p-6">
               <h3 className="text-lg font-semibold mb-4">curl / fetch</h3>
-              <p className="text-neutral-400 text-sm mb-4">
-                Download the image directly:
-              </p>
+              <p className="text-neutral-400 text-sm mb-4">Download the image directly:</p>
               <pre className="bg-black rounded-lg p-4 overflow-x-auto text-sm">
                 <code className="text-green-400">{`curl "https://ogpix.vercel.app/api/og?title=Hello" -o og.png`}</code>
               </pre>
@@ -319,7 +329,7 @@ ogUrl.searchParams.set('theme', 'gradient');`}</code>
         {/* API Reference */}
         <section className="mb-24">
           <h2 className="text-3xl font-bold mb-8">API Reference</h2>
-          
+
           <div className="bg-neutral-900 border border-neutral-800 rounded-xl overflow-hidden">
             <table className="w-full text-sm">
               <thead className="bg-neutral-800">
@@ -330,19 +340,74 @@ ogUrl.searchParams.set('theme', 'gradient');`}</code>
                 </tr>
               </thead>
               <tbody className="divide-y divide-neutral-800">
-                <tr><td className="px-6 py-3 font-mono text-green-400">title</td><td className="px-6 py-3 text-neutral-400">string</td><td className="px-6 py-3">Main title text (required)</td></tr>
-                <tr><td className="px-6 py-3 font-mono text-green-400">subtitle</td><td className="px-6 py-3 text-neutral-400">string</td><td className="px-6 py-3">Secondary text below title</td></tr>
-                <tr><td className="px-6 py-3 font-mono text-green-400">theme</td><td className="px-6 py-3 text-neutral-400">string</td><td className="px-6 py-3">dark, light, gradient, blue, green, purple, orange, pink, cyan, slate, zinc, sunset, ocean, forest, midnight</td></tr>
-                <tr><td className="px-6 py-3 font-mono text-green-400">template</td><td className="px-6 py-3 text-neutral-400">string</td><td className="px-6 py-3">blog, github, product, event, docs</td></tr>
-                <tr><td className="px-6 py-3 font-mono text-green-400">pattern</td><td className="px-6 py-3 text-neutral-400">string</td><td className="px-6 py-3">none, dots, grid, diagonal</td></tr>
-                <tr><td className="px-6 py-3 font-mono text-green-400">fontSize</td><td className="px-6 py-3 text-neutral-400">string</td><td className="px-6 py-3">auto, sm, md, lg, xl</td></tr>
-                <tr><td className="px-6 py-3 font-mono text-green-400">layout</td><td className="px-6 py-3 text-neutral-400">string</td><td className="px-6 py-3">center, left</td></tr>
-                <tr><td className="px-6 py-3 font-mono text-green-400">tag</td><td className="px-6 py-3 text-neutral-400">string</td><td className="px-6 py-3">Small label above title</td></tr>
-                <tr><td className="px-6 py-3 font-mono text-green-400">author</td><td className="px-6 py-3 text-neutral-400">string</td><td className="px-6 py-3">Author name below content</td></tr>
-                <tr><td className="px-6 py-3 font-mono text-green-400">logo</td><td className="px-6 py-3 text-neutral-400">url</td><td className="px-6 py-3">URL to logo/icon image</td></tr>
-                <tr><td className="px-6 py-3 font-mono text-green-400">bg</td><td className="px-6 py-3 text-neutral-400">color</td><td className="px-6 py-3">Custom background color (hex)</td></tr>
-                <tr><td className="px-6 py-3 font-mono text-green-400">text</td><td className="px-6 py-3 text-neutral-400">color</td><td className="px-6 py-3">Custom text color (hex)</td></tr>
-                <tr><td className="px-6 py-3 font-mono text-green-400">watermark</td><td className="px-6 py-3 text-neutral-400">boolean</td><td className="px-6 py-3">Show/hide watermark (default: true)</td></tr>
+                <tr>
+                  <td className="px-6 py-3 font-mono text-green-400">title</td>
+                  <td className="px-6 py-3 text-neutral-400">string</td>
+                  <td className="px-6 py-3">Main title text (required)</td>
+                </tr>
+                <tr>
+                  <td className="px-6 py-3 font-mono text-green-400">subtitle</td>
+                  <td className="px-6 py-3 text-neutral-400">string</td>
+                  <td className="px-6 py-3">Secondary text below title</td>
+                </tr>
+                <tr>
+                  <td className="px-6 py-3 font-mono text-green-400">theme</td>
+                  <td className="px-6 py-3 text-neutral-400">string</td>
+                  <td className="px-6 py-3">
+                    dark, light, gradient, blue, green, purple, orange, pink, cyan, slate, zinc,
+                    sunset, ocean, forest, midnight
+                  </td>
+                </tr>
+                <tr>
+                  <td className="px-6 py-3 font-mono text-green-400">template</td>
+                  <td className="px-6 py-3 text-neutral-400">string</td>
+                  <td className="px-6 py-3">blog, github, product, event, docs</td>
+                </tr>
+                <tr>
+                  <td className="px-6 py-3 font-mono text-green-400">pattern</td>
+                  <td className="px-6 py-3 text-neutral-400">string</td>
+                  <td className="px-6 py-3">none, dots, grid, diagonal</td>
+                </tr>
+                <tr>
+                  <td className="px-6 py-3 font-mono text-green-400">fontSize</td>
+                  <td className="px-6 py-3 text-neutral-400">string</td>
+                  <td className="px-6 py-3">auto, sm, md, lg, xl</td>
+                </tr>
+                <tr>
+                  <td className="px-6 py-3 font-mono text-green-400">layout</td>
+                  <td className="px-6 py-3 text-neutral-400">string</td>
+                  <td className="px-6 py-3">center, left</td>
+                </tr>
+                <tr>
+                  <td className="px-6 py-3 font-mono text-green-400">tag</td>
+                  <td className="px-6 py-3 text-neutral-400">string</td>
+                  <td className="px-6 py-3">Small label above title</td>
+                </tr>
+                <tr>
+                  <td className="px-6 py-3 font-mono text-green-400">author</td>
+                  <td className="px-6 py-3 text-neutral-400">string</td>
+                  <td className="px-6 py-3">Author name below content</td>
+                </tr>
+                <tr>
+                  <td className="px-6 py-3 font-mono text-green-400">logo</td>
+                  <td className="px-6 py-3 text-neutral-400">url</td>
+                  <td className="px-6 py-3">URL to logo/icon image</td>
+                </tr>
+                <tr>
+                  <td className="px-6 py-3 font-mono text-green-400">bg</td>
+                  <td className="px-6 py-3 text-neutral-400">color</td>
+                  <td className="px-6 py-3">Custom background color (hex)</td>
+                </tr>
+                <tr>
+                  <td className="px-6 py-3 font-mono text-green-400">text</td>
+                  <td className="px-6 py-3 text-neutral-400">color</td>
+                  <td className="px-6 py-3">Custom text color (hex)</td>
+                </tr>
+                <tr>
+                  <td className="px-6 py-3 font-mono text-green-400">watermark</td>
+                  <td className="px-6 py-3 text-neutral-400">boolean</td>
+                  <td className="px-6 py-3">Show/hide watermark (default: true)</td>
+                </tr>
               </tbody>
             </table>
           </div>
@@ -354,7 +419,9 @@ ogUrl.searchParams.set('theme', 'gradient');`}</code>
           <div className="grid md:grid-cols-2 gap-8 max-w-2xl mx-auto">
             <div className="bg-neutral-900 border border-neutral-800 rounded-xl p-8">
               <h3 className="text-lg font-semibold mb-2">Free</h3>
-              <p className="text-3xl font-bold mb-4">$0<span className="text-lg text-neutral-500">/mo</span></p>
+              <p className="text-3xl font-bold mb-4">
+                $0<span className="text-lg text-neutral-500">/mo</span>
+              </p>
               <ul className="space-y-2 text-neutral-400">
                 <li>✓ Unlimited images</li>
                 <li>✓ All themes & templates</li>
@@ -368,7 +435,9 @@ ogUrl.searchParams.set('theme', 'gradient');`}</code>
                 Coming Soon
               </div>
               <h3 className="text-lg font-semibold mb-2">Pro</h3>
-              <p className="text-3xl font-bold mb-4">$9<span className="text-lg text-neutral-500">/mo</span></p>
+              <p className="text-3xl font-bold mb-4">
+                $9<span className="text-lg text-neutral-500">/mo</span>
+              </p>
               <ul className="space-y-2 text-neutral-400">
                 <li>✓ 1,000 images/month</li>
                 <li>✓ No watermark</li>
@@ -383,10 +452,14 @@ ogUrl.searchParams.set('theme', 'gradient');`}</code>
         {/* Footer */}
         <footer className="pt-8 border-t border-neutral-800 text-center text-neutral-500 text-sm">
           Built by{" "}
-          <a href="https://milo-site.milo4jo.workers.dev" className="text-white hover:text-neutral-300" target="_blank">
+          <a
+            href="https://milo-site.milo4jo.workers.dev"
+            className="text-white hover:text-neutral-300"
+            target="_blank"
+          >
             Milo
-          </a>
-          {" "}🦊 •{" "}
+          </a>{" "}
+          🦊 •{" "}
           <a href="https://github.com/milo4jo/ogpix" className="hover:text-white" target="_blank">
             GitHub
           </a>

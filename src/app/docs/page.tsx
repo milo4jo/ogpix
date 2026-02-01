@@ -9,6 +9,7 @@ const sections = [
   { id: "api-keys", label: "API Keys" },
   { id: "api-reference", label: "API Reference" },
   { id: "themes", label: "Themes" },
+  { id: "layouts", label: "Layouts" },
   { id: "templates", label: "Templates" },
   { id: "examples", label: "Examples" },
 ];
@@ -48,6 +49,13 @@ const templates = [
   { name: "changelog", description: "Release notes and changelogs" },
   { name: "showcase", description: "Portfolio and showcase items" },
   { name: "news", description: "News articles and press releases" },
+  // New Vercel-inspired templates
+  { name: "vercel", description: "Vercel-style with gradient accent bar" },
+  { name: "minimal", description: "Ultra-clean, just the title" },
+  { name: "split", description: "Left-aligned with gradient accent line" },
+  { name: "hero", description: "Large centered title with icon support" },
+  { name: "feature", description: "Title with gradient 'New' badge" },
+  { name: "release", description: "Release/changelog card style" },
 ];
 
 const parameters = [
@@ -77,7 +85,12 @@ const parameters = [
     required: false,
     description: "Text size: auto, sm, md, lg, xl",
   },
-  { name: "layout", type: "string", required: false, description: "Text alignment: center, left" },
+  {
+    name: "layout",
+    type: "string",
+    required: false,
+    description: "Layout style: center, left, hero, minimal, split, card, featured, modern",
+  },
   { name: "tag", type: "string", required: false, description: "Small label above title" },
   { name: "author", type: "string", required: false, description: "Author name at bottom" },
   { name: "logo", type: "url", required: false, description: "URL to logo/icon image" },
@@ -111,6 +124,31 @@ const parameters = [
     type: "number",
     required: false,
     description: "Corner radius in pixels (max: 60)",
+  },
+  // New Vercel-style parameters
+  {
+    name: "badge",
+    type: "string",
+    required: false,
+    description: "Gradient pill badge above title (e.g., 'New', 'Beta')",
+  },
+  {
+    name: "date",
+    type: "string",
+    required: false,
+    description: "Date display for card layout",
+  },
+  {
+    name: "icon",
+    type: "string",
+    required: false,
+    description: "Emoji/icon for hero layout (e.g., 🚀)",
+  },
+  {
+    name: "gradientText",
+    type: "boolean",
+    required: false,
+    description: "Apply gradient effect to title text",
   },
 ];
 
@@ -408,6 +446,55 @@ Cache-Control: public, max-age=31536000, immutable`}
               <CodeBlock code={`/api/og?title=Custom&bg=1a1a2e&text=eaeaea`} language="text" />
             </section>
 
+            {/* Layouts */}
+            <section id="layouts" className="scroll-mt-20">
+              <h1 className="text-3xl sm:text-4xl font-bold mb-4">Layouts</h1>
+              <p className="text-neutral-400 mb-8 text-lg">
+                Different layout styles for your OG images, inspired by Vercel&apos;s design.
+              </p>
+
+              <div className="grid sm:grid-cols-2 gap-4">
+                <div className="bg-neutral-900 border border-neutral-800 rounded-lg p-4">
+                  <code className="text-green-400 font-medium">center</code>
+                  <p className="text-neutral-500 text-sm mt-1">Default centered layout</p>
+                </div>
+                <div className="bg-neutral-900 border border-neutral-800 rounded-lg p-4">
+                  <code className="text-green-400 font-medium">left</code>
+                  <p className="text-neutral-500 text-sm mt-1">Left-aligned at bottom</p>
+                </div>
+                <div className="bg-neutral-900 border border-neutral-800 rounded-lg p-4">
+                  <code className="text-green-400 font-medium">hero</code>
+                  <p className="text-neutral-500 text-sm mt-1">Large centered title with icon support</p>
+                </div>
+                <div className="bg-neutral-900 border border-neutral-800 rounded-lg p-4">
+                  <code className="text-green-400 font-medium">minimal</code>
+                  <p className="text-neutral-500 text-sm mt-1">Ultra-clean, just the title</p>
+                </div>
+                <div className="bg-neutral-900 border border-neutral-800 rounded-lg p-4">
+                  <code className="text-green-400 font-medium">split</code>
+                  <p className="text-neutral-500 text-sm mt-1">Left-aligned with gradient accent line</p>
+                </div>
+                <div className="bg-neutral-900 border border-neutral-800 rounded-lg p-4">
+                  <code className="text-green-400 font-medium">card</code>
+                  <p className="text-neutral-500 text-sm mt-1">Blog card style with author/date metadata</p>
+                </div>
+                <div className="bg-neutral-900 border border-neutral-800 rounded-lg p-4">
+                  <code className="text-green-400 font-medium">featured</code>
+                  <p className="text-neutral-500 text-sm mt-1">Title with gradient badge support</p>
+                </div>
+                <div className="bg-neutral-900 border border-neutral-800 rounded-lg p-4">
+                  <code className="text-green-400 font-medium">modern</code>
+                  <p className="text-neutral-500 text-sm mt-1">Vercel-style with gradient accent bar at top</p>
+                </div>
+              </div>
+
+              <h2 className="text-xl font-semibold mt-8 mb-4">Example</h2>
+              <CodeBlock
+                code={`/api/og?title=Ship+Faster&subtitle=Deploy+with+confidence&layout=modern`}
+                language="text"
+              />
+            </section>
+
             {/* Templates */}
             <section id="templates" className="scroll-mt-20">
               <h1 className="text-3xl sm:text-4xl font-bold mb-4">Templates</h1>
@@ -454,6 +541,36 @@ Cache-Control: public, max-age=31536000, immutable`}
               <h2 className="text-xl font-semibold mt-8 mb-4">Product Launch</h2>
               <CodeBlock
                 code={`https://ogpix.vercel.app/api/og?title=Introducing+ProductX&subtitle=The+future+of+productivity&template=product&theme=sunset&pattern=dots`}
+                language="text"
+              />
+
+              <h2 className="text-xl font-semibold mt-8 mb-4">Vercel-style Modern</h2>
+              <CodeBlock
+                code={`https://ogpix.vercel.app/api/og?title=Ship+Faster&subtitle=Deploy+with+confidence&layout=modern&theme=dark`}
+                language="text"
+              />
+
+              <h2 className="text-xl font-semibold mt-8 mb-4">Hero with Icon</h2>
+              <CodeBlock
+                code={`https://ogpix.vercel.app/api/og?title=Launching+Soon&subtitle=Something+big+is+coming&layout=hero&icon=🚀&theme=dark`}
+                language="text"
+              />
+
+              <h2 className="text-xl font-semibold mt-8 mb-4">Feature with Badge</h2>
+              <CodeBlock
+                code={`https://ogpix.vercel.app/api/og?title=New+AI+Features&subtitle=Powered+by+GPT-4&badge=New&layout=featured&theme=midnight`}
+                language="text"
+              />
+
+              <h2 className="text-xl font-semibold mt-8 mb-4">Gradient Title Text</h2>
+              <CodeBlock
+                code={`https://ogpix.vercel.app/api/og?title=Beautiful+Gradients&gradientText=true&theme=dark&fontSize=xl`}
+                language="text"
+              />
+
+              <h2 className="text-xl font-semibold mt-8 mb-4">Card with Metadata</h2>
+              <CodeBlock
+                code={`https://ogpix.vercel.app/api/og?title=Release+Notes&subtitle=Version+2.0&layout=card&author=Team&date=Feb+2026&theme=dark`}
                 language="text"
               />
 

@@ -28,6 +28,12 @@ const themes = [
   { name: "ocean", description: "Blue to teal gradient" },
   { name: "forest", description: "Green nature tones" },
   { name: "midnight", description: "Deep navy blue" },
+  { name: "aurora", description: "Cyan to purple to pink gradient" },
+  { name: "ember", description: "Orange to yellow fire gradient" },
+  { name: "neon", description: "Vibrant cyan/magenta/yellow neon" },
+  { name: "lavender", description: "Soft purple to blue pastel" },
+  { name: "mint", description: "Fresh green pastel gradient" },
+  { name: "rose", description: "Warm peach to pink pastel" },
 ];
 
 const templates = [
@@ -81,6 +87,24 @@ const parameters = [
     type: "boolean",
     required: false,
     description: "Show OGPix watermark (default: true)",
+  },
+  {
+    name: "borderWidth",
+    type: "number",
+    required: false,
+    description: "Border width in pixels (max: 20)",
+  },
+  {
+    name: "borderColor",
+    type: "hex",
+    required: false,
+    description: "Border color (e.g., ffffff)",
+  },
+  {
+    name: "borderRadius",
+    type: "number",
+    required: false,
+    description: "Corner radius in pixels (max: 60)",
   },
 ];
 

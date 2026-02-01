@@ -48,7 +48,7 @@ https://ogpix.vercel.app/api/og
 |-----------|------|-------------|
 | `title` | string | **Required.** Main title text |
 | `subtitle` | string | Secondary text below title |
-| `theme` | string | `dark` `light` `gradient` `blue` `green` `purple` `orange` `pink` `cyan` `slate` `zinc` `sunset` `ocean` `forest` `midnight` |
+| `theme` | string | `dark` `light` `gradient` `blue` `green` `purple` `orange` `pink` `cyan` `slate` `zinc` `sunset` `ocean` `forest` `midnight` `aurora` `ember` `neon` `lavender` `mint` `rose` |
 | `template` | string | `blog` `github` `product` `event` `docs` |
 | `pattern` | string | `none` `dots` `grid` `diagonal` |
 | `fontSize` | string | `auto` `sm` `md` `lg` `xl` |
@@ -59,6 +59,9 @@ https://ogpix.vercel.app/api/og
 | `bg` | hex | Custom background color |
 | `text` | hex | Custom text color |
 | `watermark` | boolean | Show/hide watermark (default: true) |
+| `borderWidth` | number | Border width in pixels (max: 20) |
+| `borderColor` | hex | Border color (e.g., ffffff) |
+| `borderRadius` | number | Corner radius in pixels (max: 60) |
 
 ### Examples
 

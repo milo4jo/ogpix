@@ -317,6 +317,11 @@ export async function GET(request: NextRequest) {
   const author = sanitizeText(searchParams.get("author") || "", 100);
   const watermark = searchParams.get("watermark") !== "false";
 
+  // Border customization (Pro feature preview)
+  const borderWidth = parseInt(searchParams.get("borderWidth") || "0", 10);
+  const borderColor = searchParams.get("borderColor") || "#ffffff";
+  const borderRadius = parseInt(searchParams.get("borderRadius") || "0", 10);
+
   // Validate logo URL
   const logoUrlParam = searchParams.get("logo") || "";
   const logoUrl = isValidLogoUrl(logoUrlParam) ? logoUrlParam : "";
@@ -360,6 +365,37 @@ export async function GET(request: NextRequest) {
       bg: "linear-gradient(135deg, #1e293b 0%, #0f172a 100%)",
       text: "#f8fafc",
       accent: "#94a3b8",
+    },
+    // New gradient themes
+    aurora: {
+      bg: "linear-gradient(135deg, #00d4ff 0%, #7c3aed 50%, #f472b6 100%)",
+      text: "#ffffff",
+      accent: "#ffffffcc",
+    },
+    ember: {
+      bg: "linear-gradient(135deg, #ff6b35 0%, #f7931e 50%, #ffcc00 100%)",
+      text: "#000000",
+      accent: "#00000099",
+    },
+    neon: {
+      bg: "linear-gradient(135deg, #0ff 0%, #f0f 50%, #ff0 100%)",
+      text: "#000000",
+      accent: "#00000099",
+    },
+    lavender: {
+      bg: "linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%)",
+      text: "#1a1a2e",
+      accent: "#1a1a2ecc",
+    },
+    mint: {
+      bg: "linear-gradient(135deg, #d4fc79 0%, #96e6a1 100%)",
+      text: "#1a1a2e",
+      accent: "#1a1a2ecc",
+    },
+    rose: {
+      bg: "linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)",
+      text: "#1a1a2e",
+      accent: "#1a1a2ecc",
     },
   };
 
@@ -409,6 +445,14 @@ export async function GET(request: NextRequest) {
         background: colors.bg,
         padding: "60px",
         position: "relative",
+        ...(borderWidth > 0 && {
+          border: `${Math.min(borderWidth, 20)}px solid ${borderColor}`,
+          boxSizing: "border-box",
+        }),
+        ...(borderRadius > 0 && {
+          borderRadius: `${Math.min(borderRadius, 60)}px`,
+          overflow: "hidden",
+        }),
       }}
     >
       {/* Pattern overlay - now using React components */}

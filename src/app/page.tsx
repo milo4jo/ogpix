@@ -36,6 +36,26 @@ export default function Home() {
           </div>
         </div>
 
+        {/* Stats Bar */}
+        <div className="flex flex-wrap justify-center gap-6 sm:gap-10 mb-12 text-center">
+          <div>
+            <div className="text-2xl sm:text-3xl font-bold">21</div>
+            <div className="text-sm text-neutral-500">Themes</div>
+          </div>
+          <div>
+            <div className="text-2xl sm:text-3xl font-bold">10</div>
+            <div className="text-sm text-neutral-500">Templates</div>
+          </div>
+          <div>
+            <div className="text-2xl sm:text-3xl font-bold">100%</div>
+            <div className="text-sm text-neutral-500">Free to Start</div>
+          </div>
+          <div>
+            <div className="text-2xl sm:text-3xl font-bold">&lt;100ms</div>
+            <div className="text-sm text-neutral-500">Response Time</div>
+          </div>
+        </div>
+
         {/* Live Builder (Client Component) */}
         <OGBuilder />
 
@@ -63,6 +83,55 @@ export default function Home() {
               <h3 className="font-semibold mb-2">API Reference →</h3>
               <p className="text-sm text-neutral-400">All parameters documented</p>
             </Link>
+          </div>
+        </section>
+
+        {/* Features */}
+        <section className="mb-16 sm:mb-24">
+          <h2 className="text-2xl sm:text-3xl font-bold mb-8 text-center">Why OGPix?</h2>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="p-6 bg-neutral-900/50 border border-neutral-800 rounded-xl">
+              <div className="text-2xl mb-3">⚡</div>
+              <h3 className="font-semibold mb-2">Instant Generation</h3>
+              <p className="text-sm text-neutral-400">
+                Edge-rendered images in under 100ms. No waiting, no queues.
+              </p>
+            </div>
+            <div className="p-6 bg-neutral-900/50 border border-neutral-800 rounded-xl">
+              <div className="text-2xl mb-3">🎨</div>
+              <h3 className="font-semibold mb-2">21 Themes</h3>
+              <p className="text-sm text-neutral-400">
+                From dark mode to vibrant gradients. Find the perfect style for your brand.
+              </p>
+            </div>
+            <div className="p-6 bg-neutral-900/50 border border-neutral-800 rounded-xl">
+              <div className="text-2xl mb-3">📐</div>
+              <h3 className="font-semibold mb-2">10 Templates</h3>
+              <p className="text-sm text-neutral-400">
+                Blog, GitHub, Product, Event, and more. Pre-designed for common use cases.
+              </p>
+            </div>
+            <div className="p-6 bg-neutral-900/50 border border-neutral-800 rounded-xl">
+              <div className="text-2xl mb-3">🔧</div>
+              <h3 className="font-semibold mb-2">Full Customization</h3>
+              <p className="text-sm text-neutral-400">
+                Custom colors, borders, patterns, fonts. Make it truly yours.
+              </p>
+            </div>
+            <div className="p-6 bg-neutral-900/50 border border-neutral-800 rounded-xl">
+              <div className="text-2xl mb-3">🔗</div>
+              <h3 className="font-semibold mb-2">Simple API</h3>
+              <p className="text-sm text-neutral-400">
+                One URL, all parameters. Works with any framework or platform.
+              </p>
+            </div>
+            <div className="p-6 bg-neutral-900/50 border border-neutral-800 rounded-xl">
+              <div className="text-2xl mb-3">💰</div>
+              <h3 className="font-semibold mb-2">Free to Start</h3>
+              <p className="text-sm text-neutral-400">
+                100 images per month free. No credit card required.
+              </p>
+            </div>
           </div>
         </section>
 

@@ -9,7 +9,8 @@ const inter = Inter({
 });
 
 const siteUrl = "https://ogpix.vercel.app";
-const ogImageUrl = `${siteUrl}/api/og?title=OGPix&subtitle=Instant+OG+Image+API&theme=gradient&template=product`;
+// Brutal minimalism - matches landing page style
+const ogImageUrl = `${siteUrl}/api/og?title=OG+Images.&subtitle=One+URL.&theme=dark&fontSize=xl`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),

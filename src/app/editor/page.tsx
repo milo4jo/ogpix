@@ -10,11 +10,11 @@ export const metadata: Metadata = {
   description:
     "Full-featured OG image editor with all themes, templates, and customization options.",
   openGraph: {
-    title: "OG Image Editor — OGPix",
-    description: "21 themes, 10 templates, full customization. Try it free.",
+    title: "Editor — OGPix",
+    description: "21 themes, 10 templates, full customization.",
     images: [
       {
-        url: `${siteUrl}/api/og?title=OG+Image+Editor&subtitle=21+themes,+10+templates&theme=aurora&template=product`,
+        url: `${siteUrl}/api/og?title=Editor&subtitle=21+themes.+10+templates.&theme=dark&fontSize=xl`,
         width: 1200,
         height: 630,
         alt: "OGPix Editor",
@@ -23,10 +23,10 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "OG Image Editor — OGPix",
-    description: "21 themes, 10 templates, full customization. Try it free.",
+    title: "Editor — OGPix",
+    description: "21 themes, 10 templates, full customization.",
     images: [
-      `${siteUrl}/api/og?title=OG+Image+Editor&subtitle=21+themes,+10+templates&theme=aurora&template=product`,
+      `${siteUrl}/api/og?title=Editor&subtitle=21+themes.+10+templates.&theme=dark&fontSize=xl`,
     ],
   },
 };

@@ -12,10 +12,20 @@ const supabaseServiceKey = process.env.SUPABASE_SERVICE_KEY;
 const ipRequestCounts = new Map<string, { count: number; resetAt: number }>();
 const IP_RATE_LIMIT = 100; // requests per window
 const IP_RATE_WINDOW_MS = 60 * 60 * 1000; // 1 hour
+const MAX_IP_ENTRIES = 10000; // Prevent memory bloat
 
 function checkIpRateLimit(ip: string): boolean {
   const now = Date.now();
   const record = ipRequestCounts.get(ip);
+
+  // Cleanup: Remove expired entries if map is getting large
+  if (ipRequestCounts.size > MAX_IP_ENTRIES) {
+    for (const [key, value] of ipRequestCounts) {
+      if (now > value.resetAt) {
+        ipRequestCounts.delete(key);
+      }
+    }
+  }
 
   if (!record || now > record.resetAt) {
     ipRequestCounts.set(ip, { count: 1, resetAt: now + IP_RATE_WINDOW_MS });
@@ -42,14 +52,24 @@ function isValidLogoUrl(url: string): boolean {
 
     // Block private/internal IPs and localhost
     const hostname = parsed.hostname.toLowerCase();
+    
+    // Check for localhost and common internal hostnames
     if (
       hostname === "localhost" ||
       hostname === "127.0.0.1" ||
+      hostname === "0.0.0.0" ||
+      hostname.endsWith(".local") ||
+      hostname.endsWith(".internal") ||
+      hostname.endsWith(".localhost")
+    ) {
+      return false;
+    }
+    
+    // Check for private IP ranges (RFC 1918)
+    if (
       hostname.startsWith("192.168.") ||
       hostname.startsWith("10.") ||
-      hostname.startsWith("172.") ||
-      hostname.endsWith(".local") ||
-      hostname.endsWith(".internal")
+      hostname.match(/^172\.(1[6-9]|2[0-9]|3[0-1])\./) // 172.16.0.0 - 172.31.255.255
     ) {
       return false;
     }
@@ -132,14 +152,17 @@ async function trackUsage(
   }
 
   // Log usage and update last_used_at in parallel (fire and forget for speed)
-  Promise.all([
+  // Using void to explicitly ignore the promise, with catch to prevent unhandled rejections
+  void Promise.all([
     supabase.from("usage_logs").insert({
       api_key_id: keyData.id,
       theme: theme,
       endpoint: "/api/og",
     }),
     supabase.from("api_keys").update({ last_used_at: new Date().toISOString() }).eq("id", keyData.id),
-  ]);
+  ]).catch(() => {
+    // Silently ignore logging failures - don't block the response
+  });
 
   return { allowed: true, usage: currentUsage + 1, limit: monthlyLimit };
 }

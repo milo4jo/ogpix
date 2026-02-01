@@ -56,21 +56,36 @@ export default function Home() {
             href="/editor"
             className="p-6 border border-neutral-800 rounded-xl hover:border-neutral-700 hover:bg-neutral-900/50 transition-all group"
           >
-            <h3 className="font-semibold mb-2 group-hover:text-white">Full Editor →</h3>
+            <h3 className="font-semibold mb-2 group-hover:text-white flex items-center gap-2">
+              Full Editor
+              <svg className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </h3>
             <p className="text-sm text-neutral-500">All themes, templates, options</p>
           </Link>
           <Link
             href="/docs"
             className="p-6 border border-neutral-800 rounded-xl hover:border-neutral-700 hover:bg-neutral-900/50 transition-all group"
           >
-            <h3 className="font-semibold mb-2 group-hover:text-white">Documentation →</h3>
+            <h3 className="font-semibold mb-2 group-hover:text-white flex items-center gap-2">
+              Documentation
+              <svg className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </h3>
             <p className="text-sm text-neutral-500">API reference & examples</p>
           </Link>
           <Link
             href="/dashboard"
             className="p-6 border border-neutral-800 rounded-xl hover:border-neutral-700 hover:bg-neutral-900/50 transition-all group"
           >
-            <h3 className="font-semibold mb-2 group-hover:text-white">Get API Key →</h3>
+            <h3 className="font-semibold mb-2 group-hover:text-white flex items-center gap-2">
+              Get API Key
+              <svg className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </h3>
             <p className="text-sm text-neutral-500">Free tier, no credit card</p>
           </Link>
         </div>

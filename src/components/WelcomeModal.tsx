@@ -95,7 +95,7 @@ export function WelcomeModal({ userName, onClose, onCreateKey }: WelcomeModalPro
               }}
               className="flex-1 px-4 py-3 bg-white text-black hover:bg-neutral-200 rounded-xl font-medium transition-colors"
             >
-              Create API Key →
+              Create API Key
             </button>
           ) : (
             <button

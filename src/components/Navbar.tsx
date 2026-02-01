@@ -196,10 +196,18 @@ export function Navbar() {
             href="https://github.com/milo4jo/ogpix"
             target="_blank"
             rel="noopener noreferrer"
-            className="block px-4 py-3 text-base text-neutral-400 hover:text-white hover:bg-neutral-900 transition-colors"
+            className="flex items-center gap-2 px-4 py-3 text-base text-neutral-400 hover:text-white hover:bg-neutral-900 transition-colors"
             onClick={closeMenu}
           >
-            GitHub ↗
+            GitHub
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={1.5}
+                d="M7 17L17 7M17 7H7M17 7V17"
+              />
+            </svg>
           </a>
         </div>
       )}

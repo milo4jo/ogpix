@@ -182,7 +182,7 @@ export default function DashboardPage() {
             onClick={() => signOut({ callbackUrl: "/" })}
             className="text-sm text-neutral-500 hover:text-white transition-colors self-start sm:self-auto"
           >
-            Sign out →
+            Sign out
           </button>
         </div>
 
@@ -243,8 +243,11 @@ export default function DashboardPage() {
           <div className="bg-gradient-to-br from-neutral-900/50 to-neutral-800/30 border border-neutral-800/50 rounded-2xl p-6">
             <div className="text-sm text-neutral-500 mb-4">Your Plan</div>
             <div className="text-4xl font-bold capitalize mb-2">{data?.plan?.plan || "Free"}</div>
-            <button className="text-xs text-blue-400 hover:text-blue-300 transition-colors group">
-              Upgrade to Pro <span className="group-hover:translate-x-0.5 inline-block transition-transform">→</span>
+            <button className="text-xs text-blue-400 hover:text-blue-300 transition-colors group inline-flex items-center gap-1">
+              Upgrade to Pro
+              <svg className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
             </button>
           </div>
         </div>
@@ -355,15 +358,21 @@ export default function DashboardPage() {
           <div className="mt-4 flex gap-4">
             <Link 
               href="/docs"
-              className="text-sm text-blue-400 hover:text-blue-300 transition-colors"
+              className="text-sm text-blue-400 hover:text-blue-300 transition-colors inline-flex items-center gap-1 group"
             >
-              Read the docs →
+              Read the docs
+              <svg className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
             </Link>
             <Link 
               href="/editor"
-              className="text-sm text-neutral-400 hover:text-white transition-colors"
+              className="text-sm text-neutral-400 hover:text-white transition-colors inline-flex items-center gap-1 group"
             >
-              Try the editor →
+              Try the editor
+              <svg className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
             </Link>
           </div>
         </div>

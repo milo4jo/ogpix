@@ -53,23 +53,38 @@ export default function EditorPage() {
           <div className="grid sm:grid-cols-3 gap-6">
             <Link
               href="/docs#api-reference"
-              className="p-4 bg-neutral-900/50 border border-neutral-800 rounded-lg hover:border-neutral-700 transition-colors"
+              className="p-4 bg-neutral-900/50 border border-neutral-800 rounded-lg hover:border-neutral-700 transition-colors group"
             >
-              <h3 className="font-medium mb-1">API Reference →</h3>
+              <h3 className="font-medium mb-1 flex items-center gap-2">
+                API Reference
+                <svg className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </h3>
               <p className="text-sm text-neutral-500">All parameters documented</p>
             </Link>
             <Link
               href="/docs#themes"
-              className="p-4 bg-neutral-900/50 border border-neutral-800 rounded-lg hover:border-neutral-700 transition-colors"
+              className="p-4 bg-neutral-900/50 border border-neutral-800 rounded-lg hover:border-neutral-700 transition-colors group"
             >
-              <h3 className="font-medium mb-1">Theme Gallery →</h3>
+              <h3 className="font-medium mb-1 flex items-center gap-2">
+                Theme Gallery
+                <svg className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </h3>
               <p className="text-sm text-neutral-500">Browse all 21 themes</p>
             </Link>
             <Link
               href="/dashboard"
-              className="p-4 bg-neutral-900/50 border border-neutral-800 rounded-lg hover:border-neutral-700 transition-colors"
+              className="p-4 bg-neutral-900/50 border border-neutral-800 rounded-lg hover:border-neutral-700 transition-colors group"
             >
-              <h3 className="font-medium mb-1">Get API Key →</h3>
+              <h3 className="font-medium mb-1 flex items-center gap-2">
+                Get API Key
+                <svg className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </h3>
               <p className="text-sm text-neutral-500">500 images/month free</p>
             </Link>
           </div>

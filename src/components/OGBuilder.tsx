@@ -280,7 +280,9 @@ export function OGBuilder() {
         {/* Advanced Options Toggle */}
         <details className="group">
           <summary className="text-sm text-neutral-500 hover:text-white transition-colors cursor-pointer list-none flex items-center gap-2">
-            <span className="group-open:rotate-90 transition-transform">→</span>
+            <svg className="w-3 h-3 group-open:rotate-90 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
             Advanced options
           </summary>
           <div className="mt-4 space-y-4 p-4 bg-neutral-900/50 rounded-lg border border-neutral-800">

@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Navbar } from "@/components/Navbar";
+import { CodeBlock, InlineCode } from "@/components/CodeBlock";
 
 const sections = [
   { id: "quickstart", label: "Quick Start" },
@@ -152,30 +153,6 @@ const parameters = [
   },
 ];
 
-function CodeBlock({ code, language: _language = "bash" }: { code: string; language?: string }) {
-  const [copied, setCopied] = useState(false);
-
-  const handleCopy = () => {
-    navigator.clipboard.writeText(code);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
-  return (
-    <div className="relative group max-w-full overflow-hidden">
-      <pre className="bg-neutral-900 border border-neutral-800 rounded-lg p-4 overflow-x-auto text-sm">
-        <code className="text-green-400 whitespace-pre">{code}</code>
-      </pre>
-      <button
-        onClick={handleCopy}
-        className="absolute top-2 right-2 px-2 py-1 text-xs bg-neutral-800 hover:bg-neutral-700 rounded opacity-0 group-hover:opacity-100 transition-opacity"
-      >
-        {copied ? "Copied!" : "Copy"}
-      </button>
-    </div>
-  );
-}
-
 function SidebarLink({ id, label, active }: { id: string; label: string; active: boolean }) {
   return (
     <a
@@ -308,7 +285,7 @@ export default function DocsPage() {
               </p>
 
               <div className="bg-neutral-900 border border-neutral-800 rounded-xl p-6 mb-8">
-                <h3 className="text-lg font-semibold text-green-400 mb-2">
+                <h3 className="text-lg font-semibold text-emerald-400 mb-2">
                   ✓ Free Tier — Get Started Instantly
                 </h3>
                 <p className="text-neutral-400">
@@ -353,7 +330,7 @@ export default function DocsPage() {
               </p>
               <CodeBlock
                 code={`https://ogpix.vercel.app/api/og?title=Hello&key=YOUR_API_KEY`}
-                language="text"
+                language="url"
               />
               <p className="text-neutral-400 mt-4 text-sm">Or as an Authorization header:</p>
               <CodeBlock
@@ -391,7 +368,7 @@ export default function DocsPage() {
                     {parameters.map((param) => (
                       <tr key={param.name} className="border-b border-neutral-800/50">
                         <td className="py-3 pr-4">
-                          <code className="text-green-400">{param.name}</code>
+                          <InlineCode>{param.name}</InlineCode>
                           {param.required && <span className="text-red-400 text-xs ml-1">*</span>}
                           <span className="sm:hidden text-neutral-500 text-xs block mt-1">
                             {param.type}
@@ -415,7 +392,7 @@ export default function DocsPage() {
               <CodeBlock
                 code={`Content-Type: image/png
 Cache-Control: public, max-age=31536000, immutable`}
-                language="text"
+                language="bash"
               />
             </section>
 
@@ -432,7 +409,7 @@ Cache-Control: public, max-age=31536000, immutable`}
                     key={theme.name}
                     className="bg-neutral-900 border border-neutral-800 rounded-lg p-4"
                   >
-                    <code className="text-green-400 font-medium">{theme.name}</code>
+                    <InlineCode>{theme.name}</InlineCode>
                     <p className="text-neutral-500 text-sm mt-1">{theme.description}</p>
                   </div>
                 ))}
@@ -440,10 +417,10 @@ Cache-Control: public, max-age=31536000, immutable`}
 
               <h2 className="text-xl font-semibold mt-8 mb-4">Custom Colors</h2>
               <p className="text-neutral-400 mb-4">
-                Use the <code className="text-green-400">bg</code> and{" "}
-                <code className="text-green-400">text</code> parameters for custom colors:
+                Use the <InlineCode>bg</InlineCode> and{" "}
+                <InlineCode>text</InlineCode> parameters for custom colors:
               </p>
-              <CodeBlock code={`/api/og?title=Custom&bg=1a1a2e&text=eaeaea`} language="text" />
+              <CodeBlock code={`/api/og?title=Custom&bg=1a1a2e&text=eaeaea`} language="url" />
             </section>
 
             {/* Layouts */}
@@ -455,35 +432,35 @@ Cache-Control: public, max-age=31536000, immutable`}
 
               <div className="grid sm:grid-cols-2 gap-4">
                 <div className="bg-neutral-900 border border-neutral-800 rounded-lg p-4">
-                  <code className="text-green-400 font-medium">center</code>
+                  <InlineCode>center</InlineCode>
                   <p className="text-neutral-500 text-sm mt-1">Default centered layout</p>
                 </div>
                 <div className="bg-neutral-900 border border-neutral-800 rounded-lg p-4">
-                  <code className="text-green-400 font-medium">left</code>
+                  <InlineCode>left</InlineCode>
                   <p className="text-neutral-500 text-sm mt-1">Left-aligned at bottom</p>
                 </div>
                 <div className="bg-neutral-900 border border-neutral-800 rounded-lg p-4">
-                  <code className="text-green-400 font-medium">hero</code>
+                  <InlineCode>hero</InlineCode>
                   <p className="text-neutral-500 text-sm mt-1">Large centered title with icon support</p>
                 </div>
                 <div className="bg-neutral-900 border border-neutral-800 rounded-lg p-4">
-                  <code className="text-green-400 font-medium">minimal</code>
+                  <InlineCode>minimal</InlineCode>
                   <p className="text-neutral-500 text-sm mt-1">Ultra-clean, just the title</p>
                 </div>
                 <div className="bg-neutral-900 border border-neutral-800 rounded-lg p-4">
-                  <code className="text-green-400 font-medium">split</code>
+                  <InlineCode>split</InlineCode>
                   <p className="text-neutral-500 text-sm mt-1">Left-aligned with gradient accent line</p>
                 </div>
                 <div className="bg-neutral-900 border border-neutral-800 rounded-lg p-4">
-                  <code className="text-green-400 font-medium">card</code>
+                  <InlineCode>card</InlineCode>
                   <p className="text-neutral-500 text-sm mt-1">Blog card style with author/date metadata</p>
                 </div>
                 <div className="bg-neutral-900 border border-neutral-800 rounded-lg p-4">
-                  <code className="text-green-400 font-medium">featured</code>
+                  <InlineCode>featured</InlineCode>
                   <p className="text-neutral-500 text-sm mt-1">Title with gradient badge support</p>
                 </div>
                 <div className="bg-neutral-900 border border-neutral-800 rounded-lg p-4">
-                  <code className="text-green-400 font-medium">modern</code>
+                  <InlineCode>modern</InlineCode>
                   <p className="text-neutral-500 text-sm mt-1">Vercel-style with gradient accent bar at top</p>
                 </div>
               </div>
@@ -491,7 +468,7 @@ Cache-Control: public, max-age=31536000, immutable`}
               <h2 className="text-xl font-semibold mt-8 mb-4">Example</h2>
               <CodeBlock
                 code={`/api/og?title=Ship+Faster&subtitle=Deploy+with+confidence&layout=modern`}
-                language="text"
+                language="url"
               />
             </section>
 
@@ -508,7 +485,7 @@ Cache-Control: public, max-age=31536000, immutable`}
                     key={template.name}
                     className="bg-neutral-900 border border-neutral-800 rounded-lg p-4"
                   >
-                    <code className="text-green-400 font-medium">{template.name}</code>
+                    <InlineCode>{template.name}</InlineCode>
                     <p className="text-neutral-500 text-sm mt-1">{template.description}</p>
                   </div>
                 ))}
@@ -517,7 +494,7 @@ Cache-Control: public, max-age=31536000, immutable`}
               <h2 className="text-xl font-semibold mt-8 mb-4">Example</h2>
               <CodeBlock
                 code={`/api/og?title=My+Blog+Post&template=blog&tag=Tutorial&author=John+Doe`}
-                language="text"
+                language="url"
               />
             </section>
 
@@ -529,49 +506,49 @@ Cache-Control: public, max-age=31536000, immutable`}
               <h2 className="text-xl font-semibold mb-4">Blog Post</h2>
               <CodeBlock
                 code={`https://ogpix.vercel.app/api/og?title=How+to+Build+APIs&subtitle=A+complete+guide+for+beginners&template=blog&theme=dark&tag=Tutorial&author=Jane+Doe`}
-                language="text"
+                language="url"
               />
 
               <h2 className="text-xl font-semibold mt-8 mb-4">GitHub Project</h2>
               <CodeBlock
                 code={`https://ogpix.vercel.app/api/og?title=my-awesome-lib&subtitle=Fast+and+lightweight+utility+library&template=github&theme=gradient`}
-                language="text"
+                language="url"
               />
 
               <h2 className="text-xl font-semibold mt-8 mb-4">Product Launch</h2>
               <CodeBlock
                 code={`https://ogpix.vercel.app/api/og?title=Introducing+ProductX&subtitle=The+future+of+productivity&template=product&theme=sunset&pattern=dots`}
-                language="text"
+                language="url"
               />
 
               <h2 className="text-xl font-semibold mt-8 mb-4">Vercel-style Modern</h2>
               <CodeBlock
                 code={`https://ogpix.vercel.app/api/og?title=Ship+Faster&subtitle=Deploy+with+confidence&layout=modern&theme=dark`}
-                language="text"
+                language="url"
               />
 
               <h2 className="text-xl font-semibold mt-8 mb-4">Hero with Icon</h2>
               <CodeBlock
                 code={`https://ogpix.vercel.app/api/og?title=Launching+Soon&subtitle=Something+big+is+coming&layout=hero&icon=🚀&theme=dark`}
-                language="text"
+                language="url"
               />
 
               <h2 className="text-xl font-semibold mt-8 mb-4">Feature with Badge</h2>
               <CodeBlock
                 code={`https://ogpix.vercel.app/api/og?title=New+AI+Features&subtitle=Powered+by+GPT-4&badge=New&layout=featured&theme=midnight`}
-                language="text"
+                language="url"
               />
 
               <h2 className="text-xl font-semibold mt-8 mb-4">Gradient Title Text</h2>
               <CodeBlock
                 code={`https://ogpix.vercel.app/api/og?title=Beautiful+Gradients&gradientText=true&theme=dark&fontSize=xl`}
-                language="text"
+                language="url"
               />
 
               <h2 className="text-xl font-semibold mt-8 mb-4">Card with Metadata</h2>
               <CodeBlock
                 code={`https://ogpix.vercel.app/api/og?title=Release+Notes&subtitle=Version+2.0&layout=card&author=Team&date=Feb+2026&theme=dark`}
-                language="text"
+                language="url"
               />
 
               <h2 className="text-xl font-semibold mt-8 mb-4">Dynamic Generation (Next.js)</h2>

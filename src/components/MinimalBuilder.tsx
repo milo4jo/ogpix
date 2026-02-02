@@ -112,7 +112,7 @@ export function MinimalBuilder() {
         {/* URL + Actions */}
         <div className="flex flex-col sm:flex-row gap-3 pt-4">
           <div className="flex-1 bg-neutral-900 border border-neutral-800 rounded-lg px-4 py-3 flex items-center gap-2">
-            <code className="text-sm text-green-400 truncate flex-1">{fullUrl}</code>
+            <code className="text-sm text-neutral-300 truncate flex-1 font-mono">{fullUrl}</code>
             <button
               onClick={handleCopy}
               className="shrink-0 text-sm text-neutral-400 hover:text-white transition-colors"

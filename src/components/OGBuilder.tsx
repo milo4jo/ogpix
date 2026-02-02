@@ -463,7 +463,7 @@ export function OGBuilder() {
         <div>
           <label className="block text-sm text-neutral-500 mb-2">Your API URL</label>
           <div className="bg-neutral-900 border border-neutral-800 rounded-lg p-3 flex items-start gap-2">
-            <code className="text-xs sm:text-sm text-green-400 break-all flex-1">{fullUrl}</code>
+            <code className="text-xs sm:text-sm text-neutral-300 break-all flex-1 font-mono">{fullUrl}</code>
             <button
               onClick={handleCopy}
               className="shrink-0 px-2 py-1 text-xs bg-neutral-800 hover:bg-neutral-700 rounded transition-colors"

@@ -41,7 +41,7 @@ export function WaitlistForm() {
     return (
       <div className="text-center py-4">
         <div className="text-2xl mb-2">🎉</div>
-        <p className="text-green-400 font-medium">{message}</p>
+        <p className="text-emerald-400 font-medium">{message}</p>
       </div>
     );
   }

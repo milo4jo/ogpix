@@ -64,3 +64,163 @@ test.describe("Editor Page", () => {
     await expect(copyButton).toBeVisible();
   });
 });
+
+test.describe("Editor Templates", () => {
+  test("should have Modern template (not named Vercel)", async ({ page }) => {
+    await page.goto("/editor");
+
+    // Modern template should exist
+    const modernButton = page.getByRole("button", { name: "Modern" });
+    await expect(modernButton).toBeVisible();
+
+    // Should NOT have a button literally named "Vercel"
+    const vercelButton = page.getByRole("button", { name: "Vercel", exact: true });
+    await expect(vercelButton).not.toBeVisible();
+  });
+
+  test("should have all standard templates", async ({ page }) => {
+    await page.goto("/editor");
+
+    const expectedTemplates = ["Custom", "Blog Post", "GitHub/OSS", "Product", "Minimal", "Hero"];
+    
+    for (const template of expectedTemplates) {
+      const button = page.getByRole("button", { name: template });
+      await expect(button).toBeVisible();
+    }
+  });
+
+  test("should select template on click", async ({ page }) => {
+    await page.goto("/editor");
+
+    const blogButton = page.getByRole("button", { name: "Blog Post" });
+    await blogButton.click();
+
+    // Button should show selected state (bg-white text-black)
+    await expect(blogButton).toHaveClass(/bg-white/);
+  });
+});
+
+test.describe("Editor Advanced Options", () => {
+  test("should open advanced options", async ({ page }) => {
+    await page.goto("/editor");
+
+    // Click to expand advanced options
+    const advancedToggle = page.getByText("Advanced options");
+    await advancedToggle.click();
+
+    // Pattern buttons should now be visible
+    const dotsButton = page.getByRole("button", { name: "dots" });
+    await expect(dotsButton).toBeVisible();
+  });
+
+  test("should have Enhanced Styling section (not Vercel-style)", async ({ page }) => {
+    await page.goto("/editor");
+
+    // Open advanced options
+    await page.getByText("Advanced options").click();
+
+    // Should have "Enhanced Styling" label
+    const enhancedLabel = page.getByText("Enhanced Styling");
+    await expect(enhancedLabel).toBeVisible();
+
+    // Should NOT have "Vercel-style" anywhere
+    const vercelStyle = page.getByText(/Vercel-style/i);
+    await expect(vercelStyle).not.toBeVisible();
+  });
+
+  test("should NOT have Premium labels on free features", async ({ page }) => {
+    await page.goto("/editor");
+
+    // Open advanced options
+    await page.getByText("Advanced options").click();
+
+    // Border section should NOT say "Premium"
+    const premiumLabel = page.getByText(/Premium/i);
+    await expect(premiumLabel).not.toBeVisible();
+  });
+
+  test("should have pattern options that work", async ({ page }) => {
+    await page.goto("/editor");
+    await page.getByText("Advanced options").click();
+
+    // Select dots pattern
+    const dotsButton = page.getByRole("button", { name: "dots" });
+    await dotsButton.click();
+    await expect(dotsButton).toHaveClass(/bg-white/);
+
+    // URL should include pattern=dots
+    const urlDisplay = page.locator("code");
+    await expect(urlDisplay).toContainText("pattern=dots");
+  });
+
+  test("should have all layout options", async ({ page }) => {
+    await page.goto("/editor");
+    await page.getByText("Advanced options").click();
+
+    const layouts = ["center", "left", "hero", "minimal", "split", "card"];
+    
+    for (const layout of layouts) {
+      const button = page.getByRole("button", { name: layout, exact: true });
+      await expect(button).toBeVisible();
+    }
+  });
+
+  test("should have badge input in Enhanced Styling", async ({ page }) => {
+    await page.goto("/editor");
+    await page.getByText("Advanced options").click();
+
+    const badgeInput = page.getByPlaceholder("New");
+    await expect(badgeInput).toBeVisible();
+
+    await badgeInput.fill("Launch");
+    
+    // URL should include badge parameter
+    await page.waitForTimeout(400); // debounce
+    const urlDisplay = page.locator("code");
+    await expect(urlDisplay).toContainText("badge=Launch");
+  });
+
+  test("should have gradient text toggle", async ({ page }) => {
+    await page.goto("/editor");
+    await page.getByText("Advanced options").click();
+
+    const gradientCheckbox = page.getByRole("checkbox").filter({ hasText: /gradient/i }).or(
+      page.locator("label").filter({ hasText: /gradient/i }).locator("input[type=checkbox]")
+    );
+    
+    // Find the checkbox near "Gradient title text" label
+    const gradientLabel = page.getByText("Gradient title text");
+    await expect(gradientLabel).toBeVisible();
+  });
+});
+
+test.describe("Editor Border Options", () => {
+  test("should have border width slider", async ({ page }) => {
+    await page.goto("/editor");
+    await page.getByText("Advanced options").click();
+
+    const widthSlider = page.locator('input[type="range"]').first();
+    await expect(widthSlider).toBeVisible();
+  });
+
+  test("should have border color picker", async ({ page }) => {
+    await page.goto("/editor");
+    await page.getByText("Advanced options").click();
+
+    const colorPicker = page.locator('input[type="color"]');
+    await expect(colorPicker).toBeVisible();
+  });
+
+  test("should update URL when border is set", async ({ page }) => {
+    await page.goto("/editor");
+    await page.getByText("Advanced options").click();
+
+    // Set border width > 0
+    const widthSlider = page.locator('input[type="range"]').first();
+    await widthSlider.fill("10");
+
+    // URL should include borderWidth
+    const urlDisplay = page.locator("code");
+    await expect(urlDisplay).toContainText("borderWidth=10");
+  });
+});

@@ -6,7 +6,7 @@ export const runtime = "edge";
 
 // Supabase client for edge (using service key)
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_KEY;
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 // In-memory rate limit store for edge (resets on cold start, but good enough for basic protection)
 const ipRequestCounts = new Map<string, { count: number; resetAt: number }>();
@@ -109,7 +109,7 @@ function sanitizeText(text: string, maxLength: number = 200): string {
 // Optimized usage tracking with parallel queries where possible
 async function trackUsage(
   apiKey: string,
-  theme: string
+  _theme?: string // Reserved for future use
 ): Promise<{ allowed: boolean; usage: number; limit: number }> {
   if (!supabaseUrl || !supabaseServiceKey) {
     return { allowed: true, usage: 0, limit: 500 };
@@ -147,21 +147,15 @@ async function trackUsage(
     return { allowed: false, usage: currentUsage, limit: monthlyLimit };
   }
 
-  // Log usage and update last_used_at in parallel (fire and forget for speed)
-  // Using void to explicitly ignore the promise, with catch to prevent unhandled rejections
-  void Promise.all([
-    supabase.from("usage_logs").insert({
-      api_key_id: keyData.id,
-      theme: theme,
-      endpoint: "/api/og",
-    }),
-    supabase
-      .from("api_keys")
-      .update({ last_used_at: new Date().toISOString() })
-      .eq("id", keyData.id),
-  ]).catch(() => {
-    // Silently ignore logging failures - don't block the response
-  });
+  // Log usage (fire and forget for speed)
+  // DB schema: usage_logs has only id, api_key_id, created_at
+  (async () => {
+    try {
+      await supabase.from("usage_logs").insert({ api_key_id: keyData.id });
+    } catch {
+      // Silently ignore logging failures
+    }
+  })();
 
   return { allowed: true, usage: currentUsage + 1, limit: monthlyLimit };
 }

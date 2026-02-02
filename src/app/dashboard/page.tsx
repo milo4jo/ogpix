@@ -253,6 +253,40 @@ export default function DashboardPage() {
           )}
         </div>
 
+        {/* Usage Table - only show if there are keys with usage */}
+        {data?.apiKeys && data.apiKeys.some(k => k.usage_count > 0) && (
+          <div className="border border-neutral-800/50 rounded-xl overflow-hidden mt-8">
+            <div className="p-5 border-b border-neutral-800/50">
+              <h2 className="font-medium">Usage This Month</h2>
+            </div>
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="text-left text-neutral-500 border-b border-neutral-800/30">
+                  <th className="px-5 py-3 font-medium">Key</th>
+                  <th className="px-5 py-3 font-medium text-right">Requests</th>
+                  <th className="px-5 py-3 font-medium text-right">% of Limit</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-neutral-800/20">
+                {data.apiKeys.filter(k => k.usage_count > 0).map((key) => {
+                  const percent = Math.round((key.usage_count / (data.plan?.monthly_limit || 500)) * 100);
+                  return (
+                    <tr key={key.id}>
+                      <td className="px-5 py-3 font-mono text-neutral-400">{key.key.slice(0, 12)}...</td>
+                      <td className="px-5 py-3 text-right">{key.usage_count}</td>
+                      <td className="px-5 py-3 text-right">
+                        <span className={percent > 80 ? "text-orange-400" : percent > 50 ? "text-yellow-400" : "text-neutral-400"}>
+                          {percent}%
+                        </span>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
+
         {/* Quick link to docs - minimal */}
         <div className="mt-8 text-center">
           <Link 

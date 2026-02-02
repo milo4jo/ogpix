@@ -50,8 +50,8 @@ const templates = [
   { name: "changelog", description: "Release notes and changelogs" },
   { name: "showcase", description: "Portfolio and showcase items" },
   { name: "news", description: "News articles and press releases" },
-  // New Vercel-inspired templates
-  { name: "vercel", description: "Vercel-style with gradient accent bar" },
+  // Modern style templates
+  { name: "modern", description: "Clean style with gradient accent bar (use template=vercel in API)" },
   { name: "minimal", description: "Ultra-clean, just the title" },
   { name: "split", description: "Left-aligned with gradient accent line" },
   { name: "hero", description: "Large centered title with icon support" },
@@ -94,7 +94,7 @@ const parameters = [
   },
   { name: "tag", type: "string", required: false, description: "Small label above title" },
   { name: "author", type: "string", required: false, description: "Author name at bottom" },
-  { name: "logo", type: "url", required: false, description: "URL to logo/icon image" },
+  { name: "logo", type: "url", required: false, description: "Logo URL (GitHub, Cloudflare, Unsplash, Imgur only)" },
   {
     name: "bg",
     type: "hex",
@@ -324,19 +324,13 @@ export default function DocsPage() {
                 </p>
               </div>
 
-              <h2 className="text-xl font-semibold mt-8 mb-4">Using API Keys (Pro)</h2>
+              <h2 className="text-xl font-semibold mt-8 mb-4">Using Your API Key</h2>
               <p className="text-neutral-400 mb-4">
-                When Pro launches, you&apos;ll add your API key as a query parameter:
+                Add your API key as a query parameter:
               </p>
               <CodeBlock
                 code={`https://ogpix.vercel.app/api/og?title=Hello&key=YOUR_API_KEY`}
                 language="url"
-              />
-              <p className="text-neutral-400 mt-4 text-sm">Or as an Authorization header:</p>
-              <CodeBlock
-                code={`curl -H "Authorization: Bearer YOUR_API_KEY" \\
-  "https://ogpix.vercel.app/api/og?title=Hello"`}
-                language="bash"
               />
             </section>
 
@@ -391,7 +385,7 @@ export default function DocsPage() {
               </p>
               <CodeBlock
                 code={`Content-Type: image/png
-Cache-Control: public, max-age=31536000, immutable`}
+Cache-Control: public, max-age=86400, s-maxage=86400, stale-while-revalidate=604800`}
                 language="bash"
               />
             </section>

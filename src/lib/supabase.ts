@@ -59,8 +59,7 @@ export interface UsageLog {
   id: string;
   api_key_id: string;
   created_at: string;
-  theme: string | null;
-  endpoint: string;
+  // Note: theme and endpoint were planned but not implemented in DB schema
 }
 
 export interface UserPlan {

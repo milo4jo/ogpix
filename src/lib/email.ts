@@ -18,7 +18,7 @@ interface SendEmailParams {
 
 export async function sendEmail({ to, subject, html }: SendEmailParams): Promise<boolean> {
   if (!RESEND_API_KEY) {
-    console.log("[Email] Skipped - RESEND_API_KEY not configured");
+    // Silent skip in production - no API key configured
     return false;
   }
 
@@ -43,7 +43,6 @@ export async function sendEmail({ to, subject, html }: SendEmailParams): Promise
       return false;
     }
 
-    console.log(`[Email] Sent to ${to}: ${subject}`);
     return true;
   } catch (error) {
     console.error("[Email] Error:", error);

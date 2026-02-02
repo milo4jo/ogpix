@@ -1,6 +1,7 @@
 import { ImageResponse } from "@vercel/og";
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { LIMITS, IMAGE, ALLOWED_LOGO_HOSTS, SECURITY, BRAND } from "@/lib/constants";
 
 export const runtime = "edge";
 
@@ -10,13 +11,10 @@ const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 // In-memory rate limit store for edge (resets on cold start, but good enough for basic protection)
 const ipRequestCounts = new Map<string, { count: number; resetAt: number }>();
-const IP_RATE_LIMIT = 20; // requests per day (encourages signup for more)
-const IP_RATE_WINDOW_MS = 24 * 60 * 60 * 1000; // 24 hours
-const MAX_IP_ENTRIES = 10000; // Prevent memory bloat
 
 function checkIpRateLimit(ip: string): boolean {
   // Skip rate limiting for localhost (development/testing)
-  if (ip === "127.0.0.1" || ip === "::1" || ip === "localhost") {
+  if (SECURITY.rateLimitBypassIps.includes(ip)) {
     return true;
   }
 
@@ -24,7 +22,7 @@ function checkIpRateLimit(ip: string): boolean {
   const record = ipRequestCounts.get(ip);
 
   // Cleanup: Remove expired entries if map is getting large
-  if (ipRequestCounts.size > MAX_IP_ENTRIES) {
+  if (ipRequestCounts.size > LIMITS.maxIpEntries) {
     for (const [key, value] of ipRequestCounts) {
       if (now > value.resetAt) {
         ipRequestCounts.delete(key);
@@ -33,11 +31,11 @@ function checkIpRateLimit(ip: string): boolean {
   }
 
   if (!record || now > record.resetAt) {
-    ipRequestCounts.set(ip, { count: 1, resetAt: now + IP_RATE_WINDOW_MS });
+    ipRequestCounts.set(ip, { count: 1, resetAt: now + LIMITS.rateLimitWindowMs });
     return true;
   }
 
-  if (record.count >= IP_RATE_LIMIT) {
+  if (record.count >= LIMITS.anonymousDaily) {
     return false;
   }
 
@@ -55,45 +53,29 @@ function isValidLogoUrl(url: string): boolean {
     // Only allow https
     if (parsed.protocol !== "https:") return false;
 
-    // Block private/internal IPs and localhost
     const hostname = parsed.hostname.toLowerCase();
 
-    // Check for localhost and common internal hostnames
-    if (
-      hostname === "localhost" ||
-      hostname === "127.0.0.1" ||
-      hostname === "0.0.0.0" ||
-      hostname.endsWith(".local") ||
-      hostname.endsWith(".internal") ||
-      hostname.endsWith(".localhost")
-    ) {
-      return false;
+    // Block private/internal hostnames
+    for (const blocked of SECURITY.blockedHostnames) {
+      if (hostname === blocked || hostname.endsWith(blocked)) {
+        return false;
+      }
     }
 
     // Check for private IP ranges (RFC 1918)
-    if (
-      hostname.startsWith("192.168.") ||
-      hostname.startsWith("10.") ||
-      hostname.match(/^172\.(1[6-9]|2[0-9]|3[0-1])\./) // 172.16.0.0 - 172.31.255.255
-    ) {
+    for (const prefix of SECURITY.privateIpPrefixes) {
+      if (hostname.startsWith(prefix)) {
+        return false;
+      }
+    }
+    
+    // 172.16.0.0 - 172.31.255.255
+    if (hostname.match(/^172\.(1[6-9]|2[0-9]|3[0-1])\./)) {
       return false;
     }
 
-    // Allow common image hosts and CDNs
-    const allowedHosts = [
-      "github.com",
-      "githubusercontent.com",
-      "avatars.githubusercontent.com",
-      "raw.githubusercontent.com",
-      "cloudflare.com",
-      "cdn.jsdelivr.net",
-      "images.unsplash.com",
-      "i.imgur.com",
-      "pbs.twimg.com",
-    ];
-
     // Check if hostname ends with any allowed host
-    const isAllowed = allowedHosts.some(
+    const isAllowed = ALLOWED_LOGO_HOSTS.some(
       (host) => hostname === host || hostname.endsWith("." + host)
     );
 
@@ -104,7 +86,7 @@ function isValidLogoUrl(url: string): boolean {
 }
 
 // Sanitize text input (remove potential XSS/injection)
-function sanitizeText(text: string, maxLength: number = 200): string {
+function sanitizeText(text: string, maxLength: number): string {
   return text
     .slice(0, maxLength)
     .replace(/[<>]/g, "") // Remove angle brackets
@@ -310,7 +292,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json(
         {
           error: "Rate limit exceeded",
-          message: "Daily limit of 20 images reached. Sign up for a free API key to get 500/month.",
+          message: `Daily limit of ${LIMITS.anonymousDaily} images reached. Sign up for a free API key to get ${LIMITS.freeMonthly}/month.`,
         },
         {
           status: 429,
@@ -348,8 +330,8 @@ export async function GET(request: NextRequest) {
   }
 
   // Basic parameters (sanitized)
-  const title = sanitizeText(searchParams.get("title") || "Hello World", 150);
-  const subtitle = sanitizeText(searchParams.get("subtitle") || "", 300);
+  const title = sanitizeText(searchParams.get("title") || "Hello World", IMAGE.maxTitleLength);
+  const subtitle = sanitizeText(searchParams.get("subtitle") || "", IMAGE.maxSubtitleLength);
   const theme = searchParams.get("theme") || "dark";
 
   // Advanced customization
@@ -363,13 +345,13 @@ export async function GET(request: NextRequest) {
   // New: Icon/emoji support
   const icon = searchParams.get("icon") || "";
   // New: Date display
-  const date = sanitizeText(searchParams.get("date") || "", 50);
+  const date = sanitizeText(searchParams.get("date") || "", IMAGE.maxDateLength);
   // New: Badge/category  
-  const badge = sanitizeText(searchParams.get("badge") || "", 30);
+  const badge = sanitizeText(searchParams.get("badge") || "", IMAGE.maxBadgeLength);
   // New: Gradient text option
   const gradientText = searchParams.get("gradientText") === "true";
-  const tag = sanitizeText(searchParams.get("tag") || "", 50);
-  const author = sanitizeText(searchParams.get("author") || "", 100);
+  const tag = sanitizeText(searchParams.get("tag") || "", IMAGE.maxTagLength);
+  const author = sanitizeText(searchParams.get("author") || "", IMAGE.maxAuthorLength);
   const watermark = searchParams.get("watermark") !== "false";
 
   // Border customization (Pro feature preview)
@@ -517,11 +499,11 @@ export async function GET(request: NextRequest) {
         padding: "60px",
         position: "relative",
         ...(borderWidth > 0 && {
-          border: `${Math.min(borderWidth, 20)}px solid ${borderColor}`,
+          border: `${Math.min(borderWidth, IMAGE.maxBorderWidth)}px solid ${borderColor}`,
           boxSizing: "border-box",
         }),
         ...(borderRadius > 0 && {
-          borderRadius: `${Math.min(borderRadius, 60)}px`,
+          borderRadius: `${Math.min(borderRadius, IMAGE.maxBorderRadius)}px`,
           overflow: "hidden",
         }),
       }}
@@ -749,20 +731,20 @@ export async function GET(request: NextRequest) {
             zIndex: 1,
           }}
         >
-          <span style={{ fontSize: "16px", color: colors.accent, opacity: 0.6 }}>ogpix.dev</span>
+          <span style={{ fontSize: "16px", color: colors.accent, opacity: 0.6 }}>{BRAND.watermark}</span>
         </div>
       )}
     </div>,
     {
-      width: 1200,
-      height: 630,
+      width: IMAGE.width,
+      height: IMAGE.height,
     }
   );
 
   // Add cache headers for performance
   response.headers.set(
     "Cache-Control",
-    "public, max-age=86400, s-maxage=86400, stale-while-revalidate=604800"
+    `public, max-age=${IMAGE.cache.maxAge}, s-maxage=${IMAGE.cache.sMaxAge}, stale-while-revalidate=${IMAGE.cache.staleWhileRevalidate}`
   );
 
   return response;

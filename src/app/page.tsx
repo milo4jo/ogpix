@@ -36,8 +36,8 @@ export default function Home() {
             <div className="text-neutral-500">Themes</div>
           </div>
           <div>
-            <div className="text-4xl font-bold mb-2">&lt;100ms</div>
-            <div className="text-neutral-500">Response</div>
+            <div className="text-4xl font-bold mb-2">Fast</div>
+            <div className="text-neutral-500">Edge-rendered</div>
           </div>
           <div>
             <div className="text-4xl font-bold mb-2">500</div>

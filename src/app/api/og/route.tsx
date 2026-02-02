@@ -148,12 +148,14 @@ async function trackUsage(
 }
 
 // Pattern components - using inline SVG elements (Satori supports basic SVG shapes)
+// OPTIMIZED: Fewer elements with higher opacity for better performance
 // Image size: 1200x630
 
 function DotsPattern({ color }: { color: string }) {
-  // Create dots as SVG circles - 50px spacing for cleaner look
+  // OPTIMIZED: 100px spacing (was 50px) → ~78 circles instead of ~312
+  // Higher opacity (0.25) compensates for fewer dots
   const circles = [];
-  const spacing = 50;
+  const spacing = 100;
   const cols = Math.ceil(1200 / spacing);
   const rows = Math.ceil(630 / spacing);
   
@@ -164,9 +166,9 @@ function DotsPattern({ color }: { color: string }) {
           key={`${row}-${col}`}
           cx={col * spacing + spacing / 2}
           cy={row * spacing + spacing / 2}
-          r={2}
+          r={2.5}
           fill={color}
-          opacity={0.2}
+          opacity={0.25}
         />
       );
     }
@@ -184,9 +186,10 @@ function DotsPattern({ color }: { color: string }) {
 }
 
 function GridPattern({ color }: { color: string }) {
-  // Create grid as SVG lines - 80px spacing
+  // OPTIMIZED: 120px spacing (was 80px) → ~15 lines instead of ~22
+  // Higher opacity (0.12) for visibility
   const lines = [];
-  const spacing = 80;
+  const spacing = 120;
   
   // Vertical lines
   for (let x = spacing; x < 1200; x += spacing) {
@@ -199,7 +202,7 @@ function GridPattern({ color }: { color: string }) {
         y2={630}
         stroke={color}
         strokeWidth={1}
-        opacity={0.1}
+        opacity={0.12}
       />
     );
   }
@@ -215,7 +218,7 @@ function GridPattern({ color }: { color: string }) {
         y2={y}
         stroke={color}
         strokeWidth={1}
-        opacity={0.1}
+        opacity={0.12}
       />
     );
   }
@@ -232,9 +235,10 @@ function GridPattern({ color }: { color: string }) {
 }
 
 function DiagonalPattern({ color }: { color: string }) {
-  // Create diagonal lines as SVG - 40px spacing
+  // OPTIMIZED: 80px spacing (was 40px) → ~30 lines instead of ~61
+  // Higher opacity (0.1) for visibility
   const lines = [];
-  const spacing = 40;
+  const spacing = 80;
   
   // Lines going from top-left to bottom-right
   for (let offset = -630; offset < 1200 + 630; offset += spacing) {
@@ -247,7 +251,7 @@ function DiagonalPattern({ color }: { color: string }) {
         y2={630}
         stroke={color}
         strokeWidth={1}
-        opacity={0.08}
+        opacity={0.1}
       />
     );
   }

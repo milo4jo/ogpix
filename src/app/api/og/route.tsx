@@ -160,72 +160,121 @@ async function trackUsage(
   return { allowed: true, usage: currentUsage + 1, limit: monthlyLimit };
 }
 
-// Pattern components (no dangerouslySetInnerHTML)
+// Pattern components - using direct elements (Satori doesn't support SVG defs/patterns)
+// Image size: 1200x630, with 60px padding = effective 1080x510
+
 function DotsPattern({ color }: { color: string }) {
+  // Create dots grid: 40px spacing → 30 cols x 16 rows
+  const dots = [];
+  const spacing = 40;
+  const cols = Math.ceil(1200 / spacing);
+  const rows = Math.ceil(630 / spacing);
+  
+  for (let row = 0; row < rows; row++) {
+    for (let col = 0; col < cols; col++) {
+      dots.push(
+        <div
+          key={`${row}-${col}`}
+          style={{
+            position: "absolute",
+            left: col * spacing + spacing / 2,
+            top: row * spacing + spacing / 2,
+            width: 3,
+            height: 3,
+            borderRadius: "50%",
+            backgroundColor: color,
+            opacity: 0.15,
+          }}
+        />
+      );
+    }
+  }
+  
   return (
-    <svg
-      style={{
-        position: "absolute",
-        top: 0,
-        left: 0,
-        width: "100%",
-        height: "100%",
-      }}
-    >
-      <defs>
-        <pattern id="dots" width="20" height="20" patternUnits="userSpaceOnUse">
-          <circle cx="10" cy="10" r="1.5" fill={color} opacity="0.3" />
-        </pattern>
-      </defs>
-      <rect width="100%" height="100%" fill="url(#dots)" />
-    </svg>
+    <div style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", display: "flex" }}>
+      {dots}
+    </div>
   );
 }
 
 function GridPattern({ color }: { color: string }) {
+  // Create grid lines: vertical + horizontal every 60px
+  const lines = [];
+  const spacing = 60;
+  
+  // Vertical lines
+  for (let x = spacing; x < 1200; x += spacing) {
+    lines.push(
+      <div
+        key={`v-${x}`}
+        style={{
+          position: "absolute",
+          left: x,
+          top: 0,
+          width: 1,
+          height: "100%",
+          backgroundColor: color,
+          opacity: 0.08,
+        }}
+      />
+    );
+  }
+  
+  // Horizontal lines
+  for (let y = spacing; y < 630; y += spacing) {
+    lines.push(
+      <div
+        key={`h-${y}`}
+        style={{
+          position: "absolute",
+          left: 0,
+          top: y,
+          width: "100%",
+          height: 1,
+          backgroundColor: color,
+          opacity: 0.08,
+        }}
+      />
+    );
+  }
+  
   return (
-    <svg
-      style={{
-        position: "absolute",
-        top: 0,
-        left: 0,
-        width: "100%",
-        height: "100%",
-      }}
-    >
-      <defs>
-        <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-          <path d="M 40 0 L 0 0 0 40" fill="none" stroke={color} strokeWidth="1" opacity="0.1" />
-        </pattern>
-      </defs>
-      <rect width="100%" height="100%" fill="url(#grid)" />
-    </svg>
+    <div style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", display: "flex" }}>
+      {lines}
+    </div>
   );
 }
 
 function DiagonalPattern({ color }: { color: string }) {
+  // Create diagonal lines from top-left to bottom-right
+  const lines = [];
+  const spacing = 30;
+  const totalLines = Math.ceil((1200 + 630) / spacing);
+  
+  for (let i = 0; i < totalLines; i++) {
+    const startX = i * spacing - 630;
+    lines.push(
+      <div
+        key={i}
+        style={{
+          position: "absolute",
+          left: startX,
+          top: 0,
+          width: 1,
+          height: 900, // Long enough to cover diagonal
+          backgroundColor: color,
+          opacity: 0.06,
+          transform: "rotate(45deg)",
+          transformOrigin: "top left",
+        }}
+      />
+    );
+  }
+  
   return (
-    <svg
-      style={{
-        position: "absolute",
-        top: 0,
-        left: 0,
-        width: "100%",
-        height: "100%",
-      }}
-    >
-      <defs>
-        <pattern id="diagonal" width="10" height="10" patternUnits="userSpaceOnUse">
-          <path
-            d="M-1,1 l2,-2 M0,10 l10,-10 M9,11 l2,-2"
-            stroke={color}
-            strokeWidth="1"
-            opacity="0.1"
-          />
-        </pattern>
-      </defs>
-      <rect width="100%" height="100%" fill="url(#diagonal)" />
-    </svg>
+    <div style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", overflow: "hidden", display: "flex" }}>
+      {lines}
+    </div>
   );
 }
 

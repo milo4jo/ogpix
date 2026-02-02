@@ -40,8 +40,8 @@ const templates = [
   { id: "changelog", name: "Changelog" },
   { id: "showcase", name: "Showcase" },
   { id: "news", name: "News" },
-  // New Vercel-style templates
-  { id: "vercel", name: "Vercel" },
+  // Modern style templates
+  { id: "vercel", name: "Modern" },
   { id: "minimal", name: "Minimal" },
   { id: "split", name: "Split" },
   { id: "hero", name: "Hero" },
@@ -368,12 +368,12 @@ export function OGBuilder() {
                 onChange={(e) => setWatermark(e.target.checked)}
                 className="rounded"
               />
-              Show watermark (Pro removes this)
+              Show watermark
             </label>
 
-            {/* Vercel-style Options */}
+            {/* Enhanced Styling */}
             <div className="pt-3 border-t border-neutral-800">
-              <label className="block text-xs text-neutral-500 mb-2">Vercel-style Options</label>
+              <label className="block text-xs text-neutral-500 mb-2">Enhanced Styling</label>
               <div className="grid grid-cols-2 gap-4 mb-3">
                 <div>
                   <label className="block text-xs text-neutral-600 mb-1">Badge</label>
@@ -419,7 +419,7 @@ export function OGBuilder() {
 
             {/* Border Options */}
             <div className="pt-3 border-t border-neutral-800">
-              <label className="block text-xs text-neutral-500 mb-2">Border (Premium)</label>
+              <label className="block text-xs text-neutral-500 mb-2">Border</label>
               <div className="grid grid-cols-3 gap-3">
                 <div>
                   <label className="block text-xs text-neutral-600 mb-1">Width</label>

@@ -15,6 +15,11 @@ const IP_RATE_WINDOW_MS = 24 * 60 * 60 * 1000; // 24 hours
 const MAX_IP_ENTRIES = 10000; // Prevent memory bloat
 
 function checkIpRateLimit(ip: string): boolean {
+  // Skip rate limiting for localhost (development/testing)
+  if (ip === "127.0.0.1" || ip === "::1" || ip === "localhost") {
+    return true;
+  }
+
   const now = Date.now();
   const record = ipRequestCounts.get(ip);
 
@@ -160,62 +165,59 @@ async function trackUsage(
   return { allowed: true, usage: currentUsage + 1, limit: monthlyLimit };
 }
 
-// Pattern components - using direct elements (Satori doesn't support SVG defs/patterns)
-// Image size: 1200x630, with 60px padding = effective 1080x510
+// Pattern components - using inline SVG elements (Satori supports basic SVG shapes)
+// Image size: 1200x630
 
 function DotsPattern({ color }: { color: string }) {
-  // Create dots grid: 40px spacing → 30 cols x 16 rows
-  const dots = [];
-  const spacing = 40;
+  // Create dots as SVG circles - 50px spacing for cleaner look
+  const circles = [];
+  const spacing = 50;
   const cols = Math.ceil(1200 / spacing);
   const rows = Math.ceil(630 / spacing);
   
   for (let row = 0; row < rows; row++) {
     for (let col = 0; col < cols; col++) {
-      dots.push(
-        <div
+      circles.push(
+        <circle
           key={`${row}-${col}`}
-          style={{
-            position: "absolute",
-            left: col * spacing + spacing / 2,
-            top: row * spacing + spacing / 2,
-            width: 3,
-            height: 3,
-            borderRadius: "50%",
-            backgroundColor: color,
-            opacity: 0.15,
-          }}
+          cx={col * spacing + spacing / 2}
+          cy={row * spacing + spacing / 2}
+          r={2}
+          fill={color}
+          opacity={0.2}
         />
       );
     }
   }
   
   return (
-    <div style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", display: "flex" }}>
-      {dots}
-    </div>
+    <svg
+      width="1200"
+      height="630"
+      style={{ position: "absolute", top: 0, left: 0 }}
+    >
+      {circles}
+    </svg>
   );
 }
 
 function GridPattern({ color }: { color: string }) {
-  // Create grid lines: vertical + horizontal every 60px
+  // Create grid as SVG lines - 80px spacing
   const lines = [];
-  const spacing = 60;
+  const spacing = 80;
   
   // Vertical lines
   for (let x = spacing; x < 1200; x += spacing) {
     lines.push(
-      <div
+      <line
         key={`v-${x}`}
-        style={{
-          position: "absolute",
-          left: x,
-          top: 0,
-          width: 1,
-          height: "100%",
-          backgroundColor: color,
-          opacity: 0.08,
-        }}
+        x1={x}
+        y1={0}
+        x2={x}
+        y2={630}
+        stroke={color}
+        strokeWidth={1}
+        opacity={0.1}
       />
     );
   }
@@ -223,58 +225,59 @@ function GridPattern({ color }: { color: string }) {
   // Horizontal lines
   for (let y = spacing; y < 630; y += spacing) {
     lines.push(
-      <div
+      <line
         key={`h-${y}`}
-        style={{
-          position: "absolute",
-          left: 0,
-          top: y,
-          width: "100%",
-          height: 1,
-          backgroundColor: color,
-          opacity: 0.08,
-        }}
+        x1={0}
+        y1={y}
+        x2={1200}
+        y2={y}
+        stroke={color}
+        strokeWidth={1}
+        opacity={0.1}
       />
     );
   }
   
   return (
-    <div style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", display: "flex" }}>
+    <svg
+      width="1200"
+      height="630"
+      style={{ position: "absolute", top: 0, left: 0 }}
+    >
       {lines}
-    </div>
+    </svg>
   );
 }
 
 function DiagonalPattern({ color }: { color: string }) {
-  // Create diagonal lines from top-left to bottom-right
+  // Create diagonal lines as SVG - 40px spacing
   const lines = [];
-  const spacing = 30;
-  const totalLines = Math.ceil((1200 + 630) / spacing);
+  const spacing = 40;
   
-  for (let i = 0; i < totalLines; i++) {
-    const startX = i * spacing - 630;
+  // Lines going from top-left to bottom-right
+  for (let offset = -630; offset < 1200 + 630; offset += spacing) {
     lines.push(
-      <div
-        key={i}
-        style={{
-          position: "absolute",
-          left: startX,
-          top: 0,
-          width: 1,
-          height: 900, // Long enough to cover diagonal
-          backgroundColor: color,
-          opacity: 0.06,
-          transform: "rotate(45deg)",
-          transformOrigin: "top left",
-        }}
+      <line
+        key={offset}
+        x1={offset}
+        y1={0}
+        x2={offset + 630}
+        y2={630}
+        stroke={color}
+        strokeWidth={1}
+        opacity={0.08}
       />
     );
   }
   
   return (
-    <div style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", overflow: "hidden", display: "flex" }}>
+    <svg
+      width="1200"
+      height="630"
+      style={{ position: "absolute", top: 0, left: 0 }}
+    >
       {lines}
-    </div>
+    </svg>
   );
 }
 

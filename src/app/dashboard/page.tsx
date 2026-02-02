@@ -194,8 +194,8 @@ export default function DashboardPage() {
           <div className="bg-neutral-900/50 border border-neutral-800/50 rounded-xl p-5">
             <div className="text-sm text-neutral-500 mb-2">Plan</div>
             <div className="text-3xl font-bold capitalize">{data?.plan?.plan || "Free"}</div>
-            <Link href="/#pricing" className="text-xs text-neutral-500 hover:text-white mt-2 inline-block">
-              Upgrade
+            <Link href="/dashboard/billing" className="text-xs text-neutral-500 hover:text-white mt-2 inline-block">
+              {data?.plan?.plan === "pro" ? "Manage" : "Upgrade"}
             </Link>
           </div>
         </div>

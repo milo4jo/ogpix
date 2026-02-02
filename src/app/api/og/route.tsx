@@ -97,9 +97,9 @@ function sanitizeText(text: string, maxLength: number): string {
 async function trackUsage(
   apiKey: string,
   _theme?: string // Reserved for future use
-): Promise<{ allowed: boolean; usage: number; limit: number }> {
+): Promise<{ allowed: boolean; usage: number; limit: number; isPro: boolean }> {
   if (!supabaseUrl || !supabaseServiceKey) {
-    return { allowed: true, usage: 0, limit: 500 };
+    return { allowed: true, usage: 0, limit: 500, isPro: false };
   }
 
   const supabase = createClient(supabaseUrl, supabaseServiceKey);
@@ -113,13 +113,13 @@ async function trackUsage(
     .single();
 
   if (!keyData) {
-    return { allowed: false, usage: 0, limit: 0 };
+    return { allowed: false, usage: 0, limit: 0, isPro: false };
   }
 
   // Parallel: get user plan AND count usage
   const startOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString();
   const [planResult, usageResult] = await Promise.all([
-    supabase.from("user_plans").select("monthly_limit").eq("user_id", keyData.user_id).single(),
+    supabase.from("user_plans").select("plan, monthly_limit").eq("user_id", keyData.user_id).single(),
     supabase
       .from("usage_logs")
       .select("*", { count: "exact", head: true })
@@ -127,11 +127,14 @@ async function trackUsage(
       .gte("created_at", startOfMonth),
   ]);
 
+  const isPro = planResult.data?.plan === "pro";
   const monthlyLimit = planResult.data?.monthly_limit || 500;
   const currentUsage = usageResult.count || 0;
 
-  if (currentUsage >= monthlyLimit) {
-    return { allowed: false, usage: currentUsage, limit: monthlyLimit };
+  // Pro users have unlimited (-1) or very high limit
+  const isUnlimited = monthlyLimit === -1;
+  if (!isUnlimited && currentUsage >= monthlyLimit) {
+    return { allowed: false, usage: currentUsage, limit: monthlyLimit, isPro };
   }
 
   // Log usage (fire and forget for speed)
@@ -144,7 +147,7 @@ async function trackUsage(
     }
   })();
 
-  return { allowed: true, usage: currentUsage + 1, limit: monthlyLimit };
+  return { allowed: true, usage: currentUsage + 1, limit: monthlyLimit, isPro };
 }
 
 // Pattern components - using inline SVG elements (Satori supports basic SVG shapes)
@@ -310,9 +313,11 @@ export async function GET(request: NextRequest) {
   }
 
   // Check API key and rate limiting if provided
+  let userIsPro = false;
   if (apiKey) {
     const theme = searchParams.get("theme") || "dark";
-    const { allowed, usage, limit } = await trackUsage(apiKey, theme);
+    const { allowed, usage, limit, isPro } = await trackUsage(apiKey, theme);
+    userIsPro = isPro;
 
     if (!allowed) {
       return NextResponse.json(
@@ -356,7 +361,10 @@ export async function GET(request: NextRequest) {
   const gradientText = searchParams.get("gradientText") === "true";
   const tag = sanitizeText(searchParams.get("tag") || "", IMAGE.maxTagLength);
   const author = sanitizeText(searchParams.get("author") || "", IMAGE.maxAuthorLength);
-  const watermark = searchParams.get("watermark") !== "false";
+  // Pro users: no watermark by default (can add with watermark=true)
+  // Free users: always have watermark (cannot disable)
+  const watermarkParam = searchParams.get("watermark");
+  const watermark = userIsPro ? watermarkParam === "true" : true;
 
   // Border customization (Pro feature preview)
   const borderWidth = parseInt(searchParams.get("borderWidth") || "0", 10);
